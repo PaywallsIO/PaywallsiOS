@@ -14,6 +14,14 @@
 		535363962C60834D009907F5 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 535363952C60834D009907F5 /* Base */; };
 		535363982C60834F009907F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 535363972C60834F009907F5 /* Assets.xcassets */; };
 		5353639B2C60834F009907F5 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 5353639A2C60834F009907F5 /* Base */; };
+		535363A22C608426009907F5 /* PaywallsSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363A12C608426009907F5 /* PaywallsSDK.swift */; };
+		535363A42C608863009907F5 /* Definitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363A32C608863009907F5 /* Definitions.swift */; };
+		535363A62C6088B0009907F5 /* PaywallsConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363A52C6088B0009907F5 /* PaywallsConfig.swift */; };
+		535363AB2C608C13009907F5 /* PaywallsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363AA2C608C13009907F5 /* PaywallsEvent.swift */; };
+		535363AD2C608D03009907F5 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363AC2C608D03009907F5 /* DateHelper.swift */; };
+		535363B22C608F90009907F5 /* PaywallsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363B12C608F90009907F5 /* PaywallsContainer.swift */; };
+		535363B42C609297009907F5 /* ContainerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363B32C609297009907F5 /* ContainerFactory.swift */; };
+		535363B62C6097FA009907F5 /* PaywallsValueType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363B52C6097FA009907F5 /* PaywallsValueType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +36,14 @@
 		535363972C60834F009907F5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5353639A2C60834F009907F5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5353639C2C60834F009907F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		535363A12C608426009907F5 /* PaywallsSDK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallsSDK.swift; sourceTree = "<group>"; };
+		535363A32C608863009907F5 /* Definitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Definitions.swift; sourceTree = "<group>"; };
+		535363A52C6088B0009907F5 /* PaywallsConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallsConfig.swift; sourceTree = "<group>"; };
+		535363AA2C608C13009907F5 /* PaywallsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallsEvent.swift; sourceTree = "<group>"; };
+		535363AC2C608D03009907F5 /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
+		535363B12C608F90009907F5 /* PaywallsContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallsContainer.swift; sourceTree = "<group>"; };
+		535363B32C609297009907F5 /* ContainerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerFactory.swift; sourceTree = "<group>"; };
+		535363B52C6097FA009907F5 /* PaywallsValueType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallsValueType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,7 +101,12 @@
 		535363822C6082E3009907F5 /* Paywalls */ = {
 			isa = PBXGroup;
 			children = (
+				535363B02C608F7F009907F5 /* Container */,
+				535363AF2C608F74009907F5 /* Config */,
+				535363AE2C608D0A009907F5 /* Helper */,
+				535363A92C608C05009907F5 /* Model */,
 				535363832C6082E3009907F5 /* Paywalls.h */,
+				535363A12C608426009907F5 /* PaywallsSDK.swift */,
 			);
 			path = Paywalls;
 			sourceTree = "<group>";
@@ -102,6 +123,41 @@
 				5353639C2C60834F009907F5 /* Info.plist */,
 			);
 			path = PaywallsExample;
+			sourceTree = "<group>";
+		};
+		535363A92C608C05009907F5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				535363A52C6088B0009907F5 /* PaywallsConfig.swift */,
+				535363AA2C608C13009907F5 /* PaywallsEvent.swift */,
+				535363B52C6097FA009907F5 /* PaywallsValueType.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		535363AE2C608D0A009907F5 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				535363AC2C608D03009907F5 /* DateHelper.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		535363AF2C608F74009907F5 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				535363A32C608863009907F5 /* Definitions.swift */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		535363B02C608F7F009907F5 /* Container */ = {
+			isa = PBXGroup;
+			children = (
+				535363B12C608F90009907F5 /* PaywallsContainer.swift */,
+				535363B32C609297009907F5 /* ContainerFactory.swift */,
+			);
+			path = Container;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -186,6 +242,7 @@
 					};
 					535363802C6082E3009907F5 = {
 						CreatedOnToolsVersion = 15.3;
+						LastSwiftMigration = 1530;
 					};
 					5353638B2C60834D009907F5 = {
 						CreatedOnToolsVersion = 15.3;
@@ -251,6 +308,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				535363AD2C608D03009907F5 /* DateHelper.swift in Sources */,
+				535363A42C608863009907F5 /* Definitions.swift in Sources */,
+				535363B42C609297009907F5 /* ContainerFactory.swift in Sources */,
+				535363AB2C608C13009907F5 /* PaywallsEvent.swift in Sources */,
+				535363A22C608426009907F5 /* PaywallsSDK.swift in Sources */,
+				535363B22C608F90009907F5 /* PaywallsContainer.swift in Sources */,
+				535363B62C6097FA009907F5 /* PaywallsValueType.swift in Sources */,
+				535363A62C6088B0009907F5 /* PaywallsConfig.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -449,6 +514,7 @@
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -480,6 +546,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -492,6 +559,7 @@
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;

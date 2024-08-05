@@ -1,10 +1,3 @@
-//
-//  Paywalls.h
-//  Paywalls
-//
-//  Created by David Moreen on 8/4/24.
-//
-
 #import <Foundation/Foundation.h>
 
 //! Project version number for Paywalls.

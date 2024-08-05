@@ -1,10 +1,3 @@
-//
-//  SceneDelegate.swift
-//  PaywallsExample
-//
-//  Created by David Moreen on 8/4/24.
-//
-
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
