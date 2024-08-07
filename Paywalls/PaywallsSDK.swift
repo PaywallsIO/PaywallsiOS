@@ -27,8 +27,8 @@ public final class PaywallsSDK: NSObject {
         Self.instance = PaywallsSDK(container: container)
     }
 
-    public func sayHello() {
-        container.sayHello()
+    public func capture(_ eventName: String, _ properties: [String: Any] = [:]) {
+        container.capture(eventName, properties)
     }
 
     // MARK: Private

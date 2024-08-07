@@ -68,6 +68,6 @@ final class Logger: LoggerProtocol {
         guard level.rawValue >= logLevel.rawValue else {
             return
         }
-        print("[\(Definitions.appName)] 💸 \(level.stringValue) \(level.emojii): \(message)")
+        print("[\(Definitions.libName)] 💸 \(level.stringValue) \(level.emojii): \(message)")
     }
 }

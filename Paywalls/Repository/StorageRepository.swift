@@ -3,8 +3,9 @@
 import Foundation
 
 enum StorageKey: String, CaseIterable {
-    case distinctId = "paywalls.distinctId"
+    case userId = "paywalls.userId"
     case anonymousId = "paywalls.anonymousId"
+    case userProperties = "paywalls.userProprties"
     case queue = "paywalls.queueFolder"
 }
 

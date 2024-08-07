@@ -4,7 +4,7 @@ import Foundation
 public final class PaywallsConfig: NSObject {
     @objc public let host: URL
     @objc public let apiKey: String
-    @objc public var logLevel: LogLevel = .error
+    @objc public var logLevel: LogLevel = .warn
     @objc public var eventFlushIntervalSeconds: TimeInterval = 30
 
     @objc(apiKey:)
