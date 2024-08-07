@@ -8,9 +8,12 @@ final class PaywallsContainer {
     lazy var eventsRepository = buildEventsRepository()
     lazy var identityRepository = buildIdentityRepository()
 
+    lazy var essionManager = buildSessionManager()
     lazy var requestManager = buildRequestManager()
     lazy var persistenceManager = buildPersistenceManager()
     lazy var dataSyncManager = buildDataSyncManager()
+    lazy var lifeCycleManager = buildLifeCycleManager()
+    lazy var sessionManager = buildSessionManager()
 
     lazy var identityApiClient = buildIdentityApiClient()
     lazy var eventsApiClient = buildEventsApiClient()
@@ -24,10 +27,17 @@ final class PaywallsContainer {
     ) {
         self.config = config
         self.logger = Logger(logLevel: config.logLevel)
+
+        lifeCycleManager.register()
+        dataSyncManager.startTimer()
     }
 
     func capture(_ eventName: String, _ properties: [String: Any] = [:]) {
         eventsRepository.logEvent(eventName, properties: properties)
+    }
+
+    func identify(_ userId: String) {
+        identityRepository.identify(userId)
     }
 
     // MARK: Private
@@ -41,6 +51,22 @@ final class PaywallsContainer {
             syncQueue: syncQueue,
             syncInterval: Definitions.syncInterval,
             batchSize: Definitions.batchSize
+        )
+    }
+
+    private func buildSessionManager() -> SessionManagerProtocol {
+        SessionManager(
+            eventsRepository: eventsRepository,
+            logger: logger,
+            scheduler: DispatchQueue.main
+        )
+    }
+
+    private func buildLifeCycleManager() -> LifeCycleManagerProtocol {
+        LifeCycleManager(
+            logger: logger,
+            dataSyncManager: dataSyncManager,
+            sessionManager: sessionManager
         )
     }
 

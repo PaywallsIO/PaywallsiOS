@@ -38,29 +38,29 @@ protocol LoggerProtocol {
 }
 
 final class Logger: LoggerProtocol {
-    public let logLevel: LogLevel
+    let logLevel: LogLevel
 
     init(logLevel: LogLevel) {
         self.logLevel = logLevel
     }
 
-    public func warn(_ message: String) {
+    func warn(_ message: String) {
         log(.warn, message)
     }
 
-    public func info(_ message: String) {
+    func info(_ message: String) {
         log(.info, message)
     }
 
-    public func debug(_ message: String) {
+    func debug(_ message: String) {
         log(.debug, message)
     }
 
-    public func error(_ message: String) {
+    func error(_ message: String) {
         log(.error, message)
     }
 
-    public func verbose(_ message: String) {
+    func verbose(_ message: String) {
         log(.verbose, message)
     }
 

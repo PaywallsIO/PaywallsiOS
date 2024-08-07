@@ -36,7 +36,7 @@ final class CacheSyncManager: DataSyncManagerProtocol {
         self.batchSize = batchSize
     }
 
-    public func startTimer() {
+    func startTimer() {
         stopTimer()
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
@@ -51,7 +51,7 @@ final class CacheSyncManager: DataSyncManagerProtocol {
         }
     }
 
-    public func stopTimer() {
+    func stopTimer() {
         guard let syncTimer else { return }
 
         DispatchQueue.main.async { [weak self, syncTimer] in
@@ -61,7 +61,7 @@ final class CacheSyncManager: DataSyncManagerProtocol {
         }
     }
 
-    @objc public func preformSync() {
+    @objc func preformSync() {
         syncQueue.async {
             self.preformSyncInQueue()
         }
@@ -74,7 +74,7 @@ final class CacheSyncManager: DataSyncManagerProtocol {
         }
     }
 
-    public func syncEvents() async {
+    func syncEvents() async {
         let events = persistenceManager.getAll(PersistentEvent.self, limit: batchSize, offset: 0)
         let request = LogEventsRequest(events: events.map({
             .init(
@@ -94,7 +94,7 @@ final class CacheSyncManager: DataSyncManagerProtocol {
         }
     }
 
-    public func syncAppUsers() async {
+    func syncAppUsers() async {
         let appUsers = persistenceManager.getAll(PersistentAppUser.self, limit: batchSize, offset: 0)
         let request = SaveAppUsersRequest(appUsers: appUsers.map({
             .init(

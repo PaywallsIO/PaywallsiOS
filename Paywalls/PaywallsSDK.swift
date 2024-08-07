@@ -7,11 +7,12 @@ import UIKit
 #endif
 
 @objc
+@objcMembers
 public final class PaywallsSDK: NSObject {
     private let container: PaywallsContainer
     @objc private static var instance: PaywallsSDK?
 
-    @objc public static var shared: PaywallsSDK {
+    public static var shared: PaywallsSDK {
         guard let instance = Self.instance else {
             fatalError(Definitions.paywallsNotSetup)
         }
@@ -19,7 +20,6 @@ public final class PaywallsSDK: NSObject {
         return instance
     }
 
-    @objc
     public static func setup(config: PaywallsConfig) {
         guard Self.instance == nil else { return }
 
@@ -29,6 +29,10 @@ public final class PaywallsSDK: NSObject {
 
     public func capture(_ eventName: String, _ properties: [String: Any] = [:]) {
         container.capture(eventName, properties)
+    }
+
+    public func identify(_ userId: String) {
+        container.identify(userId)
     }
 
     // MARK: Private

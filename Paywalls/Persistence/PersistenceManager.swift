@@ -98,7 +98,7 @@ CREATE INDEX IF NOT EXISTS idx_synced_at ON \(tableName) (syncedAt);
         }
     }
 
-    public func insert<T: PersistenceModel>(_ type: T.Type, _ entry: T) {
+    func insert<T: PersistenceModel>(_ type: T.Type, _ entry: T) {
         let tableName = tableName(for: type)
         let sql = "insert into \(tableName) (data) VALUES (:data)"
         do {
@@ -124,7 +124,7 @@ CREATE INDEX IF NOT EXISTS idx_synced_at ON \(tableName) (syncedAt);
         }
     }
 
-    public func getAll<T: PersistenceModel>(_ type: T.Type, limit: Int, offset: Int) -> [PersistenceResult<T>] {
+    func getAll<T: PersistenceModel>(_ type: T.Type, limit: Int, offset: Int) -> [PersistenceResult<T>] {
         let tableName = tableName(for: type)
         do {
             guard let stmt = try database?.prepare("SELECT * FROM \(tableName) LIMIT :limit OFFSET :offset") else {
@@ -149,7 +149,7 @@ CREATE INDEX IF NOT EXISTS idx_synced_at ON \(tableName) (syncedAt);
         }
     }
 
-    public func find<T: PersistenceModel>(_ type: T.Type, id: Int) -> PersistenceResult<T>? {
+    func find<T: PersistenceModel>(_ type: T.Type, id: Int) -> PersistenceResult<T>? {
         let tableName = tableName(for: type)
         do {
             let sql = "SELECT * FROM \(tableName) WHERE id = :id"
@@ -170,7 +170,7 @@ CREATE INDEX IF NOT EXISTS idx_synced_at ON \(tableName) (syncedAt);
         return nil
     }
 
-    public func delete<T: PersistenceModel>(_ type: T.Type, requests: [PersistenceDeleteRequest<T>]) {
+    func delete<T: PersistenceModel>(_ type: T.Type, requests: [PersistenceDeleteRequest<T>]) {
         let tableName = tableName(for: type)
         do {
             let ids = requests.map { String($0.id) }.joined(separator: ",")
@@ -181,7 +181,7 @@ CREATE INDEX IF NOT EXISTS idx_synced_at ON \(tableName) (syncedAt);
         }
     }
 
-    public func deleteAll(_ type: PersistenceModel.Type) {
+    func deleteAll(_ type: PersistenceModel.Type) {
         let tableName = tableName(for: type)
         do {
             try database?.execute("DELETE FROM \(tableName)")

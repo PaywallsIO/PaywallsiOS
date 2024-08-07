@@ -12,6 +12,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         PaywallsSDK.shared.capture("Test Event", [
             "test": "value"
         ])
+        PaywallsSDK.shared.identify("TestUser")
         return true
     }
 

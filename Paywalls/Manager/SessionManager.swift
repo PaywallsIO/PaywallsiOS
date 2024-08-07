@@ -1,11 +1,11 @@
 import Foundation
 
-protocol AutomaticEventsManagerProtocol {
+protocol SessionManagerProtocol {
     func startSession()
     func endSession()
 }
 
-class AutomaticEventsManager: AutomaticEventsManagerProtocol {
+class SessionManager: SessionManagerProtocol {
     private let logger: LoggerProtocol
     private let scheduler: DispatchQueue
     private let eventsRepository: EventsRepositoryProtocol
@@ -21,12 +21,15 @@ class AutomaticEventsManager: AutomaticEventsManagerProtocol {
         self.scheduler = scheduler
     }
 
-    public func startSession() {
+    func startSession() {
         self.sessionStartDate = Date()
     }
 
-    public func endSession() {
+    func endSession() {
         let elapsedTime = Date().timeIntervalSince1970 - sessionStartDate.timeIntervalSince1970
+        if elapsedTime < Definitions.maxSessionLength {
+            return
+        }
 
         eventsRepository.logEvent(InternalEvent.session, properties: [
             InternalProperty.duration.rawValue: Int(elapsedTime)

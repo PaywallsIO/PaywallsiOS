@@ -39,7 +39,7 @@ struct ApiEndpoint: ApiEndpointProtocol {
     let body: Data?
     let queryItems: [URLQueryItem]
 
-    public init(path: String, httpMethod: RequestMethod) {
+    init(path: String, httpMethod: RequestMethod) {
         self.path = path
         self.httpMethod = httpMethod
         self.headers = nil
@@ -47,7 +47,7 @@ struct ApiEndpoint: ApiEndpointProtocol {
         self.queryItems = []
     }
 
-    public init(path: String, httpMethod: RequestMethod, json: Encodable) {
+    init(path: String, httpMethod: RequestMethod, json: Encodable) {
         self.path = path
         self.httpMethod = httpMethod
         self.headers = ["Content-Type": "application/json"]
@@ -55,7 +55,7 @@ struct ApiEndpoint: ApiEndpointProtocol {
         self.queryItems = []
     }
 
-    public init(path: String, httpMethod: RequestMethod, queryItems: [URLQueryItem]) {
+    init(path: String, httpMethod: RequestMethod, queryItems: [URLQueryItem]) {
         self.path = path
         self.httpMethod = httpMethod
         self.queryItems = queryItems
