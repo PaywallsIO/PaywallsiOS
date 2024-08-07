@@ -1,9 +1,15 @@
 import UIKit
+import Paywalls
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+
+        let config = PaywallsConfig(apiKey: "12345")
+        config.logLevel = .verbose
+        PaywallsSDK.setup(config: config)
+
+        PaywallsSDK.shared.sayHello()
         return true
     }
 

@@ -1,15 +1,25 @@
 import Foundation
 
-protocol PaywallsContainerProtocol {}
+final class PaywallsContainer {
+    private let config: PaywallsConfig
+    private let logger: LoggerProtocol
 
-final class PaywallsContainer: PaywallsContainerProtocol {
-    static func makeContainer(from config: PaywallsConfig) -> any PaywallsContainerProtocol {
-        PaywallsContainer(config: config)
+    lazy var storageRepository: StorageRepositoryProtocol = makeStorageRepository()
+
+    init(
+        config: PaywallsConfig
+    ) {
+        self.config = config
+        self.logger = Logger(logLevel: config.logLevel)
     }
 
-    private let config: PaywallsConfig
+    func sayHello() {
+        logger.info("hello")
+    }
 
-    init(config: PaywallsConfig) {
-        self.config = config
+    // MARK: Private
+
+    private func makeStorageRepository() -> StorageRepositoryProtocol {
+        StorageRepository(logger: logger)
     }
 }

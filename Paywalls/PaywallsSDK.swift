@@ -8,7 +8,7 @@ import UIKit
 
 @objc
 public final class PaywallsSDK: NSObject {
-    private let container: PaywallsContainerProtocol
+    private let container: PaywallsContainer
     @objc private static var instance: PaywallsSDK?
 
     @objc public static var shared: PaywallsSDK {
@@ -22,12 +22,18 @@ public final class PaywallsSDK: NSObject {
     @objc
     public static func setup(config: PaywallsConfig) {
         guard Self.instance == nil else { return }
-        
-        let container = ContainerFactory.makeContainer(from: config)
+
+        let container = PaywallsContainer(config: config)
         Self.instance = PaywallsSDK(container: container)
     }
 
-    private init(container: PaywallsContainerProtocol) {
+    public func sayHello() {
+        container.sayHello()
+    }
+
+    // MARK: Private
+
+    private init(container: PaywallsContainer) {
         self.container = container
     }
 }
