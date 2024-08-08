@@ -1,0 +1,15 @@
+AppInstall:
+  action: "$app_install"
+  description: "PaywallSDK is configured for the first time for the given user"
+  properties:
+    sessionId:
+      type: "string"
+      required: true
+
+Session:
+  action: "$session"
+  description: "A user session with duration in sconds"
+  properties:
+    duration:
+      type: "int"
+      required: true

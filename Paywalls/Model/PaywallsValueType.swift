@@ -1,18 +1,20 @@
 import Foundation
 
-typealias AnyPaywallsValueType = Any
+public protocol PaywallsValueTypeProtocol: Any {}
 
 public struct PaywallsValueType: Codable {
-    let value: AnyPaywallsValueType
+    let value: PaywallsValueTypeProtocol?
 
-    init(value: AnyPaywallsValueType) {
+    init(value: PaywallsValueTypeProtocol?) {
         self.value = value
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
 
-        if let stringValue = try? container.decode(String.self) {
+        if container.decodeNil() {
+            self.value = nil
+        } else if let stringValue = try? container.decode(String.self) {
             self.value = stringValue
         } else if let intValue = try? container.decode(Int.self) {
             self.value = intValue
@@ -39,6 +41,11 @@ public struct PaywallsValueType: Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
 
+        guard let value else {
+            try container.encodeNil()
+            return
+        }
+
         if let stringValue = value as? String {
             try container.encode(stringValue)
         } else if let intValue = value as? Int {
@@ -51,10 +58,10 @@ public struct PaywallsValueType: Codable {
             try container.encode(floatValue)
         } else if let dateValue = value as? Date {
             try container.encode(dateValue)
-        } else if let arrayValue = value as? [AnyPaywallsValueType] {
+        } else if let arrayValue = value as? [PaywallsValueTypeProtocol] {
             let values = arrayValue.compactMap({ PaywallsValueType(value: $0) })
             try container.encode(values)
-        } else if let dictionaryValue = value as? [String: AnyPaywallsValueType] {
+        } else if let dictionaryValue = value as? [String: PaywallsValueTypeProtocol] {
             let values = dictionaryValue.compactMapValues({ PaywallsValueType(value: $0) })
             try container.encode(values)
         } else {
@@ -85,11 +92,11 @@ struct AnyCodingKey: CodingKey {
     }
 }
 
-extension String: AnyPaywallsValueType {}
-extension Int: AnyPaywallsValueType {}
-extension Double: AnyPaywallsValueType {}
-extension Bool: AnyPaywallsValueType {}
-extension Float: AnyPaywallsValueType {}
-extension Date: AnyPaywallsValueType {}
-extension Array: AnyPaywallsValueType {}
-extension Dictionary: AnyPaywallsValueType {}
+extension String: PaywallsValueTypeProtocol {}
+extension Int: PaywallsValueTypeProtocol {}
+extension Double: PaywallsValueTypeProtocol {}
+extension Bool: PaywallsValueTypeProtocol {}
+extension Float: PaywallsValueTypeProtocol {}
+extension Date: PaywallsValueTypeProtocol {}
+extension Array: PaywallsValueTypeProtocol {}
+extension Dictionary: PaywallsValueTypeProtocol {}

@@ -27,12 +27,12 @@ public final class PaywallsSDK: NSObject {
         Self.instance = PaywallsSDK(container: container)
     }
 
-    public func capture(_ eventName: String, _ properties: [String: Any] = [:]) {
+    public func capture(_ eventName: String, _ properties: [String: PaywallsValueTypeProtocol] = [:]) {
         container.capture(eventName, properties)
     }
 
-    public func identify(_ userId: String) {
-        container.identify(userId)
+    public func identify(_ distinctId: String) {
+        container.identify(distinctId)
     }
 
     // MARK: Private

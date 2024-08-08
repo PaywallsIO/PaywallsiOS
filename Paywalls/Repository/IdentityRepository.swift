@@ -2,14 +2,16 @@ import Foundation
 
 protocol IdentityRepositoryProtocol {
     var isAnonymous: Bool { get }
-    var appUserId: String { get }
-    var ogAppUserId: String? { get }
-    func identify(_ appUserId: String)
-    func fetchProperties() async throws -> [String: PaywallsValueType]
-    func setProperty(_ key: String, _ value: PaywallsValueType)
-    func setOnceProperty(_ key: String, _ value: PaywallsValueType)
+    var distinctId: String { get }
+    var ogDistinctId: String? { get }
+    func identify(_ distinctId: String)
+    func fetchProperties() async throws -> [String: PaywallsValueTypeProtocol]
+    func setProperties(_ properties: [String: PaywallsValueTypeProtocol])
+    func setOnceProperties(_ properties: [String: PaywallsValueTypeProtocol])
+    func setProperty(_ key: String, _ value: PaywallsValueTypeProtocol)
+    func setOnceProperty(_ key: String, _ value: PaywallsValueTypeProtocol)
     func removeProperty(_ key: String)
-    func getProperty(_ key: String) -> PaywallsValueType?
+    func getProperty(_ key: String) -> PaywallsValueTypeProtocol?
     func reset()
 }
 
@@ -20,23 +22,23 @@ final class IdentityRepository: IdentityRepositoryProtocol {
     private let identityApiClient: IdentityApiClientProtocol
     private let logger: LoggerProtocol
 
-    private var properties: [String: PaywallsValueType] {
-        if let properties = storageRepository.getDictionary(forKey: .userProperties) as? [String: PaywallsValueType] {
+    private var properties: [String: PaywallsValueTypeProtocol] {
+        if let properties = storageRepository.getDictionary(forKey: .userProperties) as? [String: PaywallsValueTypeProtocol] {
             return properties
         }
         return [:]
     }
-    var ogAppUserId: String?
-    var appUserId: String {
-        if let userId = storageRepository.getString(forKey: .userId) {
-            return userId
+    var ogDistinctId: String?
+    var distinctId: String {
+        if let distinctId = storageRepository.getString(forKey: .distinctId) {
+            return distinctId
         }
-        let annonUserId = generateAnonymous()
-        reset(annonUserId)
-        return annonUserId
+        let annonDistinctId = generateAnonymous()
+        reset(annonDistinctId)
+        return annonDistinctId
     }
     var isAnonymous: Bool {
-        isAnonymousId(userId: appUserId)
+        isAnonymousId(distinctId: distinctId)
     }
 
     init(
@@ -53,41 +55,41 @@ final class IdentityRepository: IdentityRepositoryProtocol {
         self.logger = logger
     }
 
-    func identify(_ userId: String) {
+    func identify(_ distinctId: String) {
         guard isAnonymous else {
-            logger.info("User is already identified as \(appUserId)")
+            logger.info("User is already identified as \(distinctId)")
             return
         }
-        guard !isAnonymousId(userId: userId) else {
-            logger.error("Cannot identify as anonymous user \(userId)")
+        guard !isAnonymousId(distinctId: distinctId) else {
+            logger.error("Cannot identify as anonymous user \(distinctId)")
             return
         }
-        ogAppUserId = appUserId
-        saveUserId(userId)
+        ogDistinctId = distinctId
+        saveDistinctId(distinctId)
     }
 
     func reset() {
         reset(generateAnonymous())
     }
 
-    func getProperty(_ key: String) -> PaywallsValueType? {
+    func getProperty(_ key: String) -> PaywallsValueTypeProtocol? {
         properties[key]
     }
 
-    func setProperty(_ key: String, _ value: PaywallsValueType) {
+    func setProperty(_ key: String, _ value: PaywallsValueTypeProtocol) {
         var properties = properties
         properties[key] = value
         savePropertiesLocally(properties)
-        enqueueOperation(set: [key: value])
+        enqueueOperation(set: [key: PaywallsValueType(value: value)])
     }
 
-    func setProperties(_ props: [String: PaywallsValueType]) {
+    func setProperties(_ props: [String: PaywallsValueTypeProtocol]) {
         let newProps = properties.merging(props, uniquingKeysWith: { _, right in right })
         savePropertiesLocally(newProps)
-        enqueueOperation(set: props)
+        enqueueOperation(set: props.mapValues({ PaywallsValueType(value: $0) }))
     }
 
-    func setOnceProperty(_ key: String, _ value: PaywallsValueType) {
+    func setOnceProperty(_ key: String, _ value: PaywallsValueTypeProtocol) {
         guard getProperty(key) == nil else {
             return
         }
@@ -96,15 +98,15 @@ final class IdentityRepository: IdentityRepositoryProtocol {
         properties[key] = value
         savePropertiesLocally(properties)
 
-        enqueueOperation(setOnce: [key: value])
+        enqueueOperation(setOnce: [key: PaywallsValueType(value: value)])
     }
 
-    func setOnceProperties(_ props: [String: PaywallsValueType]) {
+    func setOnceProperties(_ props: [String: PaywallsValueTypeProtocol]) {
         let filteredProps = props.filter({ getProperty($0.key) == nil })
         let newProps = properties.merging(filteredProps, uniquingKeysWith: { _,right in right })
 
         savePropertiesLocally(newProps)
-        enqueueOperation(setOnce: filteredProps)
+        enqueueOperation(setOnce: filteredProps.mapValues({ PaywallsValueType(value: $0) }))
     }
 
     func removeProperty(_ key: String) {
@@ -115,11 +117,11 @@ final class IdentityRepository: IdentityRepositoryProtocol {
         enqueueOperation(remove: [key])
     }
 
-    func fetchProperties() async throws -> [String: PaywallsValueType] {
+    func fetchProperties() async throws -> [String: PaywallsValueTypeProtocol] {
         do {
-            let request = GetAppUserRequest(appUserId: appUserId)
+            let request = GetAppUserRequest(distinctId: distinctId)
             let appUser = try await identityApiClient.getAppUser(request: request)
-            let propertyValues = appUser.properties.mapValues({ $0 as PaywallsValueType })
+            let propertyValues = appUser.properties.compactMapValues({ $0 as? PaywallsValueTypeProtocol })
             let newProps = properties.merging(propertyValues) { _, right in right }
             savePropertiesLocally(newProps)
             return newProps
@@ -130,24 +132,24 @@ final class IdentityRepository: IdentityRepositoryProtocol {
     }
 
     // MARK: - Private
-    private func reset(_ username: String) {
+    private func reset(_ distinctId: String) {
         storageRepository.reset()
-        ogAppUserId = nil
-        setupNewUser(username)
+        ogDistinctId = nil
+        setupNewUser(distinctId)
     }
 
-    private func setupNewUser(_ username: String) {
-        saveUserId(username)
+    private func setupNewUser(_ distinctId: String) {
+        saveDistinctId(distinctId)
         setProperties(InternalProperty.appUserProperties)
         setOnceProperties(InternalProperty.setOnceProperties)
     }
 
-    private func savePropertiesLocally(_ properties: [String: PaywallsValueType]) {
-        storageRepository.setDictionary(forKey: .userProperties, contents: properties.mapValues { $0.value })
+    private func savePropertiesLocally(_ properties: [String: PaywallsValueTypeProtocol]) {
+        storageRepository.setDictionary(forKey: .userProperties, contents: properties)
     }
 
-    private func saveUserId(_ userId: String) {
-        storageRepository.setString(forKey: .userId, contents: userId)
+    private func saveDistinctId(_ distinctId: String) {
+        storageRepository.setString(forKey: .distinctId, contents: distinctId)
     }
 
     private func enqueueOperation(
@@ -156,7 +158,7 @@ final class IdentityRepository: IdentityRepositoryProtocol {
         remove: [String] = []
     ) {
         let entity = PersistentAppUser(
-            appUserId: appUserId,
+            distinctId: distinctId,
             set: set,
             setOnce: setOnce,
             remove: remove
@@ -165,10 +167,10 @@ final class IdentityRepository: IdentityRepositoryProtocol {
     }
 
     private func generateAnonymous() -> String {
-        "\(Definitions.anonymousUserIdPrefix)\(UUID().uuidString.lowercased())"
+        "\(Definitions.anonymousDistinctIdPrefix)\(UUID().uuidString.lowercased())"
     }
 
-    private func isAnonymousId(userId: String) -> Bool {
-        userId.hasPrefix(Definitions.anonymousUserIdPrefix)
+    private func isAnonymousId(distinctId: String) -> Bool {
+        distinctId.hasPrefix(Definitions.anonymousDistinctIdPrefix)
     }
 }

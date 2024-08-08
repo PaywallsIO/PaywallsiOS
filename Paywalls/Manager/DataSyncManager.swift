@@ -79,8 +79,8 @@ final class CacheSyncManager: DataSyncManagerProtocol {
         let request = LogEventsRequest(events: events.map({
             .init(
                 localId: $0.id,
-                appUserId: $0.data.appUserId,
-                ogAppUserId: $0.data.ogAppUserId,
+                distinctId: $0.data.distinctId,
+                ogDistinctId: $0.data.ogDistinctId,
                 eventName: $0.data.eventName,
                 eventTime: $0.createdAt,
                 properties: $0.data.properties
@@ -99,7 +99,7 @@ final class CacheSyncManager: DataSyncManagerProtocol {
         let request = SaveAppUsersRequest(appUsers: appUsers.map({
             .init(
                 localId: $0.id,
-                appUserId: $0.data.appUserId,
+                distinctId: $0.data.distinctId,
                 set: $0.data.set,
                 setOnce: $0.data.setOnce,
                 remove: $0.data.remove

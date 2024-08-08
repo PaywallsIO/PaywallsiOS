@@ -41,10 +41,11 @@
 		535363F12C633C1E009907F5 /* DataDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363F02C633C1E009907F5 /* DataDecoder.swift */; };
 		535363F42C633FC2009907F5 /* IdentityRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363F22C633FC2009907F5 /* IdentityRepository.swift */; };
 		535363F52C633FC2009907F5 /* EventsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363F32C633FC2009907F5 /* EventsRepository.swift */; };
-		535363F72C634004009907F5 /* InternalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363F62C634004009907F5 /* InternalEvent.swift */; };
 		535363FA2C634207009907F5 /* DataSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363F92C634207009907F5 /* DataSyncManager.swift */; };
 		535363FC2C63422D009907F5 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363FB2C63422D009907F5 /* SessionManager.swift */; };
 		535363FE2C635145009907F5 /* LifeCycleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363FD2C635145009907F5 /* LifeCycleManager.swift */; };
+		535364032C645AE5009907F5 /* InternalEvents.yaml in Resources */ = {isa = PBXBuildFile; fileRef = 535364022C645AE5009907F5 /* InternalEvents.yaml */; };
+		535364052C645D0B009907F5 /* InternalEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535364042C645D0B009907F5 /* InternalEvents.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,10 +109,11 @@
 		535363F02C633C1E009907F5 /* DataDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataDecoder.swift; sourceTree = "<group>"; };
 		535363F22C633FC2009907F5 /* IdentityRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityRepository.swift; sourceTree = "<group>"; };
 		535363F32C633FC2009907F5 /* EventsRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventsRepository.swift; sourceTree = "<group>"; };
-		535363F62C634004009907F5 /* InternalEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternalEvent.swift; sourceTree = "<group>"; };
 		535363F92C634207009907F5 /* DataSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSyncManager.swift; sourceTree = "<group>"; };
 		535363FB2C63422D009907F5 /* SessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		535363FD2C635145009907F5 /* LifeCycleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LifeCycleManager.swift; sourceTree = "<group>"; };
+		535364022C645AE5009907F5 /* InternalEvents.yaml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = InternalEvents.yaml; sourceTree = "<group>"; };
+		535364042C645D0B009907F5 /* InternalEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternalEvents.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,7 +206,8 @@
 			children = (
 				535363B52C6097FA009907F5 /* PaywallsValueType.swift */,
 				535363D02C63384C009907F5 /* InternalProperty.swift */,
-				535363F62C634004009907F5 /* InternalEvent.swift */,
+				535364042C645D0B009907F5 /* InternalEvents.swift */,
+				535364022C645AE5009907F5 /* InternalEvents.yaml */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -429,6 +432,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				535364032C645AE5009907F5 /* InternalEvents.yaml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -456,6 +460,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				535364052C645D0B009907F5 /* InternalEvents.swift in Sources */,
 				535363AD2C608D03009907F5 /* DateHelper.swift in Sources */,
 				535363C12C616C44009907F5 /* StorageRepository.swift in Sources */,
 				535363A42C608863009907F5 /* Definitions.swift in Sources */,
@@ -479,7 +484,6 @@
 				535363B22C608F90009907F5 /* PaywallsContainer.swift in Sources */,
 				535363DB2C63389E009907F5 /* PersistenceManager.swift in Sources */,
 				535363E92C633A48009907F5 /* LogEventsRequest.swift in Sources */,
-				535363F72C634004009907F5 /* InternalEvent.swift in Sources */,
 				535363E72C633A48009907F5 /* GetAppUserRequest.swift in Sources */,
 				535363B62C6097FA009907F5 /* PaywallsValueType.swift in Sources */,
 				535363D82C63389E009907F5 /* PersistentEvent.swift in Sources */,

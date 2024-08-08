@@ -44,7 +44,7 @@ final class IdentityApiClient: IdentityApiClientProtocol {
 
     func getAppUser(request: GetAppUserRequest) async throws -> GetAppUserResponse {
         let endpoint = ApiEndpoint(
-            path: "api/app_users/\(request.appUserId)",
+            path: "api/app_users/\(request.distinctId)",
             httpMethod: .get
         )
         let (data, response) = try await requestManager.request(endpoint: endpoint)

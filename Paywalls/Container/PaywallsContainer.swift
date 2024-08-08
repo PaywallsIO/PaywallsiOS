@@ -32,12 +32,22 @@ final class PaywallsContainer {
         dataSyncManager.startTimer()
     }
 
-    func capture(_ eventName: String, _ properties: [String: Any] = [:]) {
+    func capture(_ eventName: String, _ properties: [String: PaywallsValueTypeProtocol] = [:]) {
         eventsRepository.logEvent(eventName, properties: properties)
     }
 
-    func identify(_ userId: String) {
-        identityRepository.identify(userId)
+    func identify(
+        _ distinctId: String,
+        set: [String: PaywallsValueTypeProtocol] = [:],
+        setOnce: [String: PaywallsValueTypeProtocol] = [:]
+    ) {
+        identityRepository.identify(distinctId)
+        if !setOnce.isEmpty {
+            identityRepository.setOnceProperties(setOnce)
+        }
+        if !set.isEmpty {
+            identityRepository.setProperties(set)
+        }
     }
 
     // MARK: Private

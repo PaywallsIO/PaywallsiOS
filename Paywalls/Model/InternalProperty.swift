@@ -9,8 +9,8 @@ enum InternalProperty: String {
     case bundleIdentifier = "$identifier"
     case appVersion = "$app_version"
     case appBuildNumber = "$app_build_number"
-    case lib = "$gs_lib"
-    case libVersion = "$gs_lib_version"
+    case lib = "$lib"
+    case libVersion = "$lib_version"
     case manufacturer = "$manufacturer"
     case deviceModel = "$device_model"
     case email = "$email"
@@ -26,7 +26,7 @@ enum InternalProperty: String {
     case firstSeenVersion = "$first_seen_version"
 
     static var eventProperties: [String: PaywallsValueType] = {
-        var properties = [String: AnyPaywallsValueType]()
+        var properties = [String: PaywallsValueTypeProtocol]()
 
         properties[Self.os.rawValue] = UIDevice.current.systemName
         properties[Self.osVersion.rawValue] = UIDevice.current.systemVersion
@@ -51,8 +51,8 @@ enum InternalProperty: String {
         return properties.mapValues({ PaywallsValueType(value: $0) })
     }()
 
-    static var setOnceProperties: [String: PaywallsValueType] = {
-        var properties = [String: AnyPaywallsValueType]()
+    static var setOnceProperties: [String: PaywallsValueTypeProtocol] = {
+        var properties = [String: PaywallsValueTypeProtocol]()
         properties[Self.firstSeen.rawValue] = Date().ISO8601Format()
         properties[Self.bundleIdentifier.rawValue] = Bundle.main.bundleIdentifier
         properties[Self.firstSeenLib.rawValue] = "swift"
@@ -62,11 +62,11 @@ enum InternalProperty: String {
             properties[Self.firstSeenVersion.rawValue] = version
         }
 
-        return properties.mapValues({ PaywallsValueType(value: $0) })
+        return properties
     }()
 
-    static var appUserProperties: [String: PaywallsValueType] = {
-        var properties = [String: AnyPaywallsValueType]()
+    static var appUserProperties: [String: PaywallsValueTypeProtocol] = {
+        var properties = [String: PaywallsValueTypeProtocol]()
 
         properties[Self.iosLibVersion.rawValue] = Definitions.libVersion
         properties[Self.iosDeviceModel.rawValue] = rawDeviceName
@@ -80,7 +80,7 @@ enum InternalProperty: String {
             properties[Self.iosBuildNumber.rawValue] = build
         }
 
-        return properties.mapValues({ PaywallsValueType(value: $0) })
+        return properties
     }()
 
     private static var rawDeviceName: String {

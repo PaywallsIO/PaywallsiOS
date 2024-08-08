@@ -31,8 +31,6 @@ class SessionManager: SessionManagerProtocol {
             return
         }
 
-        eventsRepository.logEvent(InternalEvent.session, properties: [
-            InternalProperty.duration.rawValue: Int(elapsedTime)
-        ])
+        eventsRepository.logEvent(InternalEvents.Session(duration: Int(elapsedTime)))
     }
 }

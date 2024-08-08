@@ -4,14 +4,14 @@ struct PersistentEvent: PersistenceModel {
     static let entityName = "events"
 
     enum CodingKeys: String, CodingKey {
-        case appUserId = "app_user_id"
-        case ogAppUserId = "og_app_user_id"
+        case distinctId = "distinct_id"
+        case ogDistinctId = "og_distinct_id"
         case eventName = "event_name"
         case properties = "properties"
     }
 
-    let appUserId: String
-    let ogAppUserId: String?
+    let distinctId: String
+    let ogDistinctId: String?
     let eventName: String
     let properties: [String: PaywallsValueType]
 }

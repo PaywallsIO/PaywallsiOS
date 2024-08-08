@@ -3,7 +3,7 @@
 import Foundation
 
 enum StorageKey: String, CaseIterable {
-    case userId = "paywalls.userId"
+    case distinctId = "paywalls.distinctId"
     case anonymousId = "paywalls.anonymousId"
     case userProperties = "paywalls.userProprties"
     case queue = "paywalls.queueFolder"
@@ -15,8 +15,8 @@ protocol StorageRepositoryProtocol {
     func remove(key: StorageKey)
     func getString(forKey key: StorageKey) -> String?
     func setString(forKey key: StorageKey, contents: String)
-    func getDictionary(forKey key: StorageKey) -> [AnyHashable: Any]?
-    func setDictionary(forKey key: StorageKey, contents: [AnyHashable: Any])
+    func getDictionary(forKey key: StorageKey) -> [AnyHashable: PaywallsValueTypeProtocol]?
+    func setDictionary(forKey key: StorageKey, contents: [AnyHashable: PaywallsValueTypeProtocol])
     func getBool(forKey key: StorageKey) -> Bool?
     func setBool(forKey key: StorageKey, contents: Bool)
 }
@@ -62,11 +62,11 @@ class StorageRepository: StorageRepositoryProtocol {
         setJson(forKey: key, json: contents)
     }
 
-    func getDictionary(forKey key: StorageKey) -> [AnyHashable: Any]? {
-        getJson(forKey: key) as? [AnyHashable: Any]
+    func getDictionary(forKey key: StorageKey) -> [AnyHashable: PaywallsValueTypeProtocol]? {
+        getJson(forKey: key) as? [AnyHashable: PaywallsValueTypeProtocol]
     }
 
-    func setDictionary(forKey key: StorageKey, contents: [AnyHashable: Any]) {
+    func setDictionary(forKey key: StorageKey, contents: [AnyHashable: PaywallsValueTypeProtocol]) {
         setJson(forKey: key, json: contents)
     }
 
