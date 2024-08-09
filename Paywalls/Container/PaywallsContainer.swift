@@ -49,8 +49,12 @@ final class PaywallsContainer {
         eventsRepository.logEvent(InternalEvents.Identify(
             set: set,
             setOnce: setOnce,
-            unset: nil
+            unset: []
         ))
+    }
+
+    func reset() {
+        identityRepository.reset()
     }
 
     // MARK: Private

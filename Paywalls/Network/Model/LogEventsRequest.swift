@@ -5,19 +5,19 @@ struct LogEventsRequest: Codable {
 
     struct Event: Codable {
         enum CodingKeys: String, CodingKey {
-            case localId = "local_id"
             case distinctId = "distinct_id"
             case oldDistinctId = "old_distinct_id"
-            case eventName = "event_name"
-            case eventTime = "event_time"
+            case eventName = "name"
+            case uuid = "uuid"
+            case timestamp = "timestamp"
             case properties = "properties"
         }
 
-        let localId: Int
+        let uuid: String
         let distinctId: String
         let oldDistinctId: String?
         let eventName: String
-        let eventTime: Date
+        let timestamp: Int
         let properties: [String: PaywallsValueType]
     }
 }

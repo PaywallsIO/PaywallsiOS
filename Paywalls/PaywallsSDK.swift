@@ -35,6 +35,10 @@ public final class PaywallsSDK: NSObject {
         container.identify(distinctId)
     }
 
+    public func reset() {
+        container.reset()
+    }
+
     // MARK: Private
 
     private init(container: PaywallsContainer) {

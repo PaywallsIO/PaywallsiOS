@@ -20,8 +20,11 @@ Identify:
   properties:
     $set:
       type: "dict"
+      required: true
     $set_once:
       type: "dict"
+      required: true
     $unset:
       type: "array"
       valueType: "string"
+      required: true

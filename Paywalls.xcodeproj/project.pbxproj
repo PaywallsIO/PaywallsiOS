@@ -31,7 +31,6 @@
 		535363E72C633A48009907F5 /* GetAppUserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363DC2C633A48009907F5 /* GetAppUserRequest.swift */; };
 		535363E82C633A48009907F5 /* GetAppUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363DD2C633A48009907F5 /* GetAppUserResponse.swift */; };
 		535363E92C633A48009907F5 /* LogEventsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363DE2C633A48009907F5 /* LogEventsRequest.swift */; };
-		535363EA2C633A48009907F5 /* LogEventsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363DF2C633A48009907F5 /* LogEventsResponse.swift */; };
 		535363ED2C633A48009907F5 /* EventsApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363E32C633A48009907F5 /* EventsApiClient.swift */; };
 		535363EE2C633A48009907F5 /* IdentityApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363E42C633A48009907F5 /* IdentityApiClient.swift */; };
 		535363EF2C633A48009907F5 /* RequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363E52C633A48009907F5 /* RequestManager.swift */; };
@@ -96,7 +95,6 @@
 		535363DC2C633A48009907F5 /* GetAppUserRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetAppUserRequest.swift; sourceTree = "<group>"; };
 		535363DD2C633A48009907F5 /* GetAppUserResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetAppUserResponse.swift; sourceTree = "<group>"; };
 		535363DE2C633A48009907F5 /* LogEventsRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogEventsRequest.swift; sourceTree = "<group>"; };
-		535363DF2C633A48009907F5 /* LogEventsResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogEventsResponse.swift; sourceTree = "<group>"; };
 		535363E32C633A48009907F5 /* EventsApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventsApiClient.swift; sourceTree = "<group>"; };
 		535363E42C633A48009907F5 /* IdentityApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityApiClient.swift; sourceTree = "<group>"; };
 		535363E52C633A48009907F5 /* RequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestManager.swift; sourceTree = "<group>"; };
@@ -167,10 +165,10 @@
 		535363822C6082E3009907F5 /* Paywalls */ = {
 			isa = PBXGroup;
 			children = (
+				535363B02C608F7F009907F5 /* Container */,
 				535363F82C6341FC009907F5 /* Manager */,
 				535363E62C633A48009907F5 /* Network */,
 				535363D72C63389E009907F5 /* Persistence */,
-				535363B02C608F7F009907F5 /* Container */,
 				535363C42C632A30009907F5 /* Repository */,
 				535363B72C6169B0009907F5 /* UI */,
 				535363A92C608C05009907F5 /* Model */,
@@ -274,7 +272,6 @@
 				535363DC2C633A48009907F5 /* GetAppUserRequest.swift */,
 				535363DD2C633A48009907F5 /* GetAppUserResponse.swift */,
 				535363DE2C633A48009907F5 /* LogEventsRequest.swift */,
-				535363DF2C633A48009907F5 /* LogEventsResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -464,7 +461,6 @@
 				535363FC2C63422D009907F5 /* SessionManager.swift in Sources */,
 				535363F12C633C1E009907F5 /* DataDecoder.swift in Sources */,
 				535363FE2C635145009907F5 /* LifeCycleManager.swift in Sources */,
-				535363EA2C633A48009907F5 /* LogEventsResponse.swift in Sources */,
 				535363BC2C616ACF009907F5 /* Logger.swift in Sources */,
 				535363EF2C633A48009907F5 /* RequestManager.swift in Sources */,
 				535363FA2C634207009907F5 /* DataSyncManager.swift in Sources */,

@@ -5,7 +5,7 @@ protocol IdentityRepositoryProtocol {
     var distinctId: String { get }
     var oldDistinctId: String? { get }
     func identify(
-        _ distinctId: String,
+        _ newDistinctId: String,
         set: [String: PaywallsValueTypeProtocol],
         setOnce: [String: PaywallsValueTypeProtocol]
     )
@@ -54,7 +54,7 @@ final class IdentityRepository: IdentityRepositoryProtocol {
     }
 
     func identify(
-        _ distinctId: String,
+        _ newDistinctId: String,
         set: [String: PaywallsValueTypeProtocol] = [:],
         setOnce: [String: PaywallsValueTypeProtocol] = [:]
     ) {
@@ -62,12 +62,12 @@ final class IdentityRepository: IdentityRepositoryProtocol {
             logger.info("User is already identified as \(distinctId)")
             return
         }
-        guard !isAnonymousId(distinctId: distinctId) else {
+        guard !isAnonymousId(distinctId: newDistinctId) else {
             logger.error("Cannot identify as anonymous user \(distinctId)")
             return
         }
         oldDistinctId = distinctId
-        saveDistinctId(distinctId)
+        saveDistinctId(newDistinctId)
     }
 
     func reset() {

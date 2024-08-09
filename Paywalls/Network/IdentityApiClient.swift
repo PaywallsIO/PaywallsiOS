@@ -1,7 +1,6 @@
 import Foundation
 
 protocol IdentityApiClientProtocol {
-    func saveAppUsers(request: SaveAppUsersRequest) async throws -> SaveAppUsersResponse
     func getAppUser(request: GetAppUserRequest) async throws -> GetAppUserResponse
 }
 

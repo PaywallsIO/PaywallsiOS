@@ -16,6 +16,8 @@ final class EventsRepository: EventsRepositoryProtocol {
     private let persistenceManager: PersistenceManagerProtocol
     private let identityRepository: IdentityRepositoryProtocol
 
+    private let appUserEvents = Set<String>(["$identify", "$set"])
+
     init(
         persistenceManager: PersistenceManagerProtocol,
         identityRepository: IdentityRepositoryProtocol,
@@ -50,13 +52,18 @@ final class EventsRepository: EventsRepositoryProtocol {
         _ eventName: String,
         properties: [String: PaywallsValueTypeProtocol?]
     ) {
-        let properties = properties.mapValues({ PaywallsValueType(value: $0) })
+        let eventProperties = properties.merging(InternalProperty.eventProperties) { left, _ in left }
+
         let entity = PersistentEvent(
             distinctId: identityRepository.distinctId,
             oldDistinctId: identityRepository.oldDistinctId,
             eventName: eventName,
-            properties: properties.merging(InternalProperty.eventProperties) { left, _ in left }
+            properties: eventProperties.mapValues({ PaywallsValueType(value: $0) })
         )
         persistenceManager.insert(PersistentEvent.self, entity)
+    }
+
+    private func isAppUserEvent(_ eventName: String) -> Bool {
+        appUserEvents.contains(eventName)
     }
 }

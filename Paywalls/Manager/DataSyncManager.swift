@@ -76,24 +76,24 @@ final class CacheSyncManager: DataSyncManagerProtocol {
         let events = persistenceManager.getAll(PersistentEvent.self, limit: batchSize, offset: 0)
         let request = LogEventsRequest(events: events.map({
             .init(
-                localId: $0.id,
+                uuid: $0.data.uuid,
                 distinctId: $0.data.distinctId,
                 oldDistinctId: $0.data.oldDistinctId,
                 eventName: $0.data.eventName,
-                eventTime: $0.createdAt,
+                timestamp: Int($0.createdAt.timeIntervalSince1970),
                 properties: $0.data.properties
             )
         }))
         do {
-            let response = try await eventsApiClient.logEvents(request: request)
-            processEventsResponse(response)
+            try await eventsApiClient.logEvents(request: request)
+            deleteEvents(events.map(\.id))
         } catch {
             logger.error("Error sending events to server: \(error.localizedDescription)")
         }
     }
 
-    private func processEventsResponse(_ response: LogEventsResponse) {
-        persistenceManager.delete(PersistentEvent.self, requests: response.processed.map({
+    private func deleteEvents(_ eventIds: [Int]) {
+        persistenceManager.delete(PersistentEvent.self, requests: eventIds.map({
             .init(id: $0)
         }))
     }

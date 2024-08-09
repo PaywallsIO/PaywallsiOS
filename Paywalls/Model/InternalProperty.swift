@@ -25,7 +25,7 @@ enum InternalProperty: String {
     case firstSeenLib = "$first_seen_lib"
     case firstSeenVersion = "$first_seen_version"
 
-    static var eventProperties: [String: PaywallsValueType] = {
+    static var eventProperties: [String: PaywallsValueTypeProtocol] = {
         var properties = [String: PaywallsValueTypeProtocol]()
 
         properties[Self.os.rawValue] = UIDevice.current.systemName
@@ -48,7 +48,7 @@ enum InternalProperty: String {
             properties[Self.appVersion.rawValue] = version
         }
 
-        return properties.mapValues({ PaywallsValueType(value: $0) })
+        return properties
     }()
 
     static var setOnceProperties: [String: PaywallsValueTypeProtocol] = {

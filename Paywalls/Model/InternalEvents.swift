@@ -2,9 +2,9 @@ struct InternalEvents {
 	/// Sets the the current user
 	struct Identify: InternalEvent {
 		let action = "$identify"
-		let set: [String: PaywallsValueTypeProtocol]?
-		let setOnce: [String: PaywallsValueTypeProtocol]?
-		let unset: [String]?
+		let set: [String: PaywallsValueTypeProtocol]
+		let setOnce: [String: PaywallsValueTypeProtocol]
+		let unset: [String]
 		var properties: [String: PaywallsValueTypeProtocol?] {
 			[
 				"$set": set,

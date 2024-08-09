@@ -8,12 +8,7 @@ protocol PersistenceModel: Codable {
 struct PersistenceResult<T: PersistenceModel> {
     let id: Int
     let data: T
-    let syncedAt: Date?
     let createdAt: Date
-
-    func prefilledUpdateRequest() -> PersistenceUpdateRequest<T> {
-        .init(id: id, syncedAt: syncedAt)
-    }
 
     func prefilledDeleteRequest() -> PersistenceDeleteRequest<T> {
         .init(id: id)
@@ -22,7 +17,6 @@ struct PersistenceResult<T: PersistenceModel> {
 
 struct PersistenceUpdateRequest<T: PersistenceModel> {
     let id: Int
-    var syncedAt: Date?
 }
 
 struct PersistenceDeleteRequest<T: PersistenceModel> {
@@ -85,10 +79,8 @@ final class SqlitePersistenceManager: PersistenceManagerProtocol {
 CREATE TABLE IF NOT EXISTS \(tableName) (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     data BLOB NOT NULL,
-    syncedAt DATETIME DEFAULT NULL,
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX IF NOT EXISTS idx_synced_at ON \(tableName) (syncedAt);
 """
         do {
             try database?.execute(sql)
@@ -114,9 +106,6 @@ CREATE INDEX IF NOT EXISTS idx_synced_at ON \(tableName) (syncedAt);
         let tableName = tableName(for: type)
         do {
             let values = ContentValues()
-            values.add([
-                .init("syncedAt", request.syncedAt)
-            ])
             _ = try database?.update(into: tableName, values: values, where: "id = :id", with: .init("id", request.id))
             logger.debug("Updated row in \(tableName) with id \(request.id)")
         } catch {
@@ -205,7 +194,6 @@ CREATE INDEX IF NOT EXISTS idx_synced_at ON \(tableName) (syncedAt);
             return .init(
                 id: id,
                 data: try decodeFromData(T.self, data),
-                syncedAt: query.date("syncedAt"),
                 createdAt: createdAt
             )
         } catch {
