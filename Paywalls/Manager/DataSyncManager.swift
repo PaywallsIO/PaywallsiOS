@@ -4,7 +4,6 @@ protocol DataSyncManagerProtocol {
     func preformSync()
     func startTimer()
     func stopTimer()
-    func syncAppUsers() async
     func syncEvents() async
 }
 
@@ -70,7 +69,6 @@ final class CacheSyncManager: DataSyncManagerProtocol {
     private func preformSyncInQueue() {
         Task {
             await syncEvents()
-            await syncAppUsers()
         }
     }
 
@@ -80,7 +78,7 @@ final class CacheSyncManager: DataSyncManagerProtocol {
             .init(
                 localId: $0.id,
                 distinctId: $0.data.distinctId,
-                ogDistinctId: $0.data.ogDistinctId,
+                oldDistinctId: $0.data.oldDistinctId,
                 eventName: $0.data.eventName,
                 eventTime: $0.createdAt,
                 properties: $0.data.properties
@@ -92,31 +90,6 @@ final class CacheSyncManager: DataSyncManagerProtocol {
         } catch {
             logger.error("Error sending events to server: \(error.localizedDescription)")
         }
-    }
-
-    func syncAppUsers() async {
-        let appUsers = persistenceManager.getAll(PersistentAppUser.self, limit: batchSize, offset: 0)
-        let request = SaveAppUsersRequest(appUsers: appUsers.map({
-            .init(
-                localId: $0.id,
-                distinctId: $0.data.distinctId,
-                set: $0.data.set,
-                setOnce: $0.data.setOnce,
-                remove: $0.data.remove
-            )
-        }))
-        do {
-            let response = try await identityApiClient.saveAppUsers(request: request)
-            processAppUsersResponse(response)
-        } catch {
-            logger.error("Error sending profiles to server: \(error.localizedDescription)")
-        }
-    }
-
-    private func processAppUsersResponse(_ response: SaveAppUsersResponse) {
-        persistenceManager.delete(PersistentAppUser.self, requests: response.processed.map({
-            .init(id: $0)
-        }))
     }
 
     private func processEventsResponse(_ response: LogEventsResponse) {

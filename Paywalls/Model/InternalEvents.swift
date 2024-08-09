@@ -1,11 +1,15 @@
 struct InternalEvents {
-	/// A user session with duration in sconds
-	struct Session: InternalEvent {
-		let action = "$session"
-		let duration: Int
-		var properties: [String: PaywallsValueTypeProtocol] {
+	/// Sets the the current user
+	struct Identify: InternalEvent {
+		let action = "$identify"
+		let set: [String: PaywallsValueTypeProtocol]?
+		let setOnce: [String: PaywallsValueTypeProtocol]?
+		let unset: [String]?
+		var properties: [String: PaywallsValueTypeProtocol?] {
 			[
-				"duration": duration,
+				"$set": set,
+				"$set_once": setOnce,
+				"$unset": unset,
 			]
 		}
 	}
@@ -14,9 +18,20 @@ struct InternalEvents {
 	struct AppInstall: InternalEvent {
 		let action = "$app_install"
 		let sessionId: String
-		var properties: [String: PaywallsValueTypeProtocol] {
+		var properties: [String: PaywallsValueTypeProtocol?] {
 			[
-				"sessionId": sessionId,
+				"session_id": sessionId,
+			]
+		}
+	}
+
+	/// A user session with duration in sconds
+	struct Session: InternalEvent {
+		let action = "$session"
+		let duration: Int
+		var properties: [String: PaywallsValueTypeProtocol?] {
+			[
+				"duration": duration,
 			]
 		}
 	}

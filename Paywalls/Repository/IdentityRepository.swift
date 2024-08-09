@@ -3,22 +3,24 @@ import Foundation
 protocol IdentityRepositoryProtocol {
     var isAnonymous: Bool { get }
     var distinctId: String { get }
-    var ogDistinctId: String? { get }
-    func identify(_ distinctId: String)
+    var oldDistinctId: String? { get }
+    func identify(
+        _ distinctId: String,
+        set: [String: PaywallsValueTypeProtocol],
+        setOnce: [String: PaywallsValueTypeProtocol]
+    )
     func fetchProperties() async throws -> [String: PaywallsValueTypeProtocol]
     func setProperties(_ properties: [String: PaywallsValueTypeProtocol])
     func setOnceProperties(_ properties: [String: PaywallsValueTypeProtocol])
     func setProperty(_ key: String, _ value: PaywallsValueTypeProtocol)
     func setOnceProperty(_ key: String, _ value: PaywallsValueTypeProtocol)
-    func removeProperty(_ key: String)
+    func unsetProperty(_ key: String)
     func getProperty(_ key: String) -> PaywallsValueTypeProtocol?
     func reset()
 }
 
 final class IdentityRepository: IdentityRepositoryProtocol {
     private let storageRepository: StorageRepositoryProtocol
-    private let persistenceManager: PersistenceManagerProtocol
-    private let dataSyncManager: DataSyncManagerProtocol
     private let identityApiClient: IdentityApiClientProtocol
     private let logger: LoggerProtocol
 
@@ -28,7 +30,7 @@ final class IdentityRepository: IdentityRepositoryProtocol {
         }
         return [:]
     }
-    var ogDistinctId: String?
+    var oldDistinctId: String?
     var distinctId: String {
         if let distinctId = storageRepository.getString(forKey: .distinctId) {
             return distinctId
@@ -43,19 +45,19 @@ final class IdentityRepository: IdentityRepositoryProtocol {
 
     init(
         storageRepository: StorageRepositoryProtocol,
-        persistenceManager: PersistenceManagerProtocol,
         identityApiClient: IdentityApiClientProtocol,
-        dataSyncManager: DataSyncManagerProtocol,
         logger: LoggerProtocol
     ) {
         self.storageRepository = storageRepository
-        self.persistenceManager = persistenceManager
         self.identityApiClient = identityApiClient
-        self.dataSyncManager = dataSyncManager
         self.logger = logger
     }
 
-    func identify(_ distinctId: String) {
+    func identify(
+        _ distinctId: String,
+        set: [String: PaywallsValueTypeProtocol] = [:],
+        setOnce: [String: PaywallsValueTypeProtocol] = [:]
+    ) {
         guard isAnonymous else {
             logger.info("User is already identified as \(distinctId)")
             return
@@ -64,7 +66,7 @@ final class IdentityRepository: IdentityRepositoryProtocol {
             logger.error("Cannot identify as anonymous user \(distinctId)")
             return
         }
-        ogDistinctId = distinctId
+        oldDistinctId = distinctId
         saveDistinctId(distinctId)
     }
 
@@ -80,13 +82,12 @@ final class IdentityRepository: IdentityRepositoryProtocol {
         var properties = properties
         properties[key] = value
         savePropertiesLocally(properties)
-        enqueueOperation(set: [key: PaywallsValueType(value: value)])
     }
 
     func setProperties(_ props: [String: PaywallsValueTypeProtocol]) {
+        guard !props.isEmpty else { return }
         let newProps = properties.merging(props, uniquingKeysWith: { _, right in right })
         savePropertiesLocally(newProps)
-        enqueueOperation(set: props.mapValues({ PaywallsValueType(value: $0) }))
     }
 
     func setOnceProperty(_ key: String, _ value: PaywallsValueTypeProtocol) {
@@ -97,24 +98,20 @@ final class IdentityRepository: IdentityRepositoryProtocol {
         var properties = properties
         properties[key] = value
         savePropertiesLocally(properties)
-
-        enqueueOperation(setOnce: [key: PaywallsValueType(value: value)])
     }
 
     func setOnceProperties(_ props: [String: PaywallsValueTypeProtocol]) {
+        guard !props.isEmpty else { return }
         let filteredProps = props.filter({ getProperty($0.key) == nil })
         let newProps = properties.merging(filteredProps, uniquingKeysWith: { _,right in right })
 
         savePropertiesLocally(newProps)
-        enqueueOperation(setOnce: filteredProps.mapValues({ PaywallsValueType(value: $0) }))
     }
 
-    func removeProperty(_ key: String) {
+    func unsetProperty(_ key: String) {
         var properties = properties
         properties[key] = nil
         savePropertiesLocally(properties)
-
-        enqueueOperation(remove: [key])
     }
 
     func fetchProperties() async throws -> [String: PaywallsValueTypeProtocol] {
@@ -134,7 +131,7 @@ final class IdentityRepository: IdentityRepositoryProtocol {
     // MARK: - Private
     private func reset(_ distinctId: String) {
         storageRepository.reset()
-        ogDistinctId = nil
+        oldDistinctId = nil
         setupNewUser(distinctId)
     }
 
@@ -150,20 +147,6 @@ final class IdentityRepository: IdentityRepositoryProtocol {
 
     private func saveDistinctId(_ distinctId: String) {
         storageRepository.setString(forKey: .distinctId, contents: distinctId)
-    }
-
-    private func enqueueOperation(
-        set: [String: PaywallsValueType] = [:],
-        setOnce: [String: PaywallsValueType] = [:],
-        remove: [String] = []
-    ) {
-        let entity = PersistentAppUser(
-            distinctId: distinctId,
-            set: set,
-            setOnce: setOnce,
-            remove: remove
-        )
-        persistenceManager.insert(PersistentAppUser.self, entity)
     }
 
     private func generateAnonymous() -> String {

@@ -41,13 +41,16 @@ final class PaywallsContainer {
         set: [String: PaywallsValueTypeProtocol] = [:],
         setOnce: [String: PaywallsValueTypeProtocol] = [:]
     ) {
-        identityRepository.identify(distinctId)
-        if !setOnce.isEmpty {
-            identityRepository.setOnceProperties(setOnce)
-        }
-        if !set.isEmpty {
-            identityRepository.setProperties(set)
-        }
+        identityRepository.identify(
+            distinctId,
+            set: set,
+            setOnce: setOnce
+        )
+        eventsRepository.logEvent(InternalEvents.Identify(
+            set: set,
+            setOnce: setOnce,
+            unset: nil
+        ))
     }
 
     // MARK: Private
@@ -100,8 +103,7 @@ final class PaywallsContainer {
         SqlitePersistenceManager(
             databaseFileName: Definitions.libName,
             persistableModels: [
-                PersistentEvent.self,
-                PersistentAppUser.self
+                PersistentEvent.self
             ],
             logger: logger
         )
@@ -122,9 +124,7 @@ final class PaywallsContainer {
     private func buildIdentityRepository() -> IdentityRepositoryProtocol {
         IdentityRepository(
             storageRepository: storageRepository,
-            persistenceManager: persistenceManager,
             identityApiClient: identityApiClient,
-            dataSyncManager: dataSyncManager,
             logger: logger
         )
     }

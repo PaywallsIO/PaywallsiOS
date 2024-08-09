@@ -25,23 +25,6 @@ final class IdentityApiClient: IdentityApiClientProtocol {
         self.logger = logger
     }
 
-    func saveAppUsers(request: SaveAppUsersRequest) async throws -> SaveAppUsersResponse {
-        let endpoint = ApiEndpoint(
-            path: "api/app_users",
-            httpMethod: .post,
-            json: request
-        )
-        let (data, response) = try await requestManager.request(endpoint: endpoint)
-        switch response.statusCode {
-        case 200..<300:
-            logger.verbose("saveAppUsers data \(String(data: data, encoding: .utf8) ?? "nil")")
-            logger.verbose("saveAppUsers response \(response)")
-            return try dataDecoder.decode(SaveAppUsersResponse.self, data: data)
-        default:
-            throw IdentityApiClientError.invalidResponse
-        }
-    }
-
     func getAppUser(request: GetAppUserRequest) async throws -> GetAppUserResponse {
         let endpoint = ApiEndpoint(
             path: "api/app_users/\(request.distinctId)",

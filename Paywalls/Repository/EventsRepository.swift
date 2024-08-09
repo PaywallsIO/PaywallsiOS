@@ -8,7 +8,7 @@ protocol EventsRepositoryProtocol {
 
 protocol InternalEvent {
     var action: String { get }
-    var properties: [String: PaywallsValueTypeProtocol] { get }
+    var properties: [String: PaywallsValueTypeProtocol?] { get }
 }
 
 final class EventsRepository: EventsRepositoryProtocol {
@@ -48,12 +48,12 @@ final class EventsRepository: EventsRepositoryProtocol {
 
     private func _logEvent(
         _ eventName: String,
-        properties: [String: PaywallsValueTypeProtocol]
+        properties: [String: PaywallsValueTypeProtocol?]
     ) {
         let properties = properties.mapValues({ PaywallsValueType(value: $0) })
         let entity = PersistentEvent(
             distinctId: identityRepository.distinctId,
-            ogDistinctId: identityRepository.ogDistinctId,
+            oldDistinctId: identityRepository.oldDistinctId,
             eventName: eventName,
             properties: properties.merging(InternalProperty.eventProperties) { left, _ in left }
         )
