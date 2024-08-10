@@ -1,36 +1,52 @@
 import Foundation
 
 protocol SessionManagerProtocol {
-    func startSession()
-    func endSession()
+    var sessionId: String? { get }
+
+    func rotateSessionIdIfRequired()
+    func rotateSession()
+    func resetSession()
+    func pauseSession()
 }
 
 class SessionManager: SessionManagerProtocol {
-    private let logger: LoggerProtocol
-    private let scheduler: DispatchQueue
-    private let eventsRepository: EventsRepositoryProtocol
-    private var sessionStartDate = Date()
+    private(set) var sessionId: String?
 
-    init(
-        eventsRepository: EventsRepositoryProtocol,
-        logger: LoggerProtocol,
-        scheduler: DispatchQueue
-    ) {
-        self.eventsRepository = eventsRepository
-        self.logger = logger
-        self.scheduler = scheduler
-    }
+    private var sessionLastTimestamp: TimeInterval?
+    private let sessionLock = NSLock()
 
-    func startSession() {
-        self.sessionStartDate = Date()
-    }
-
-    func endSession() {
-        let elapsedTime = Date().timeIntervalSince1970 - sessionStartDate.timeIntervalSince1970
-        if elapsedTime < Definitions.maxSessionLength {
+    func rotateSessionIdIfRequired() {
+        guard sessionId != nil, let sessionLastTimestamp else {
+            rotateSession()
             return
         }
 
-        eventsRepository.logEvent(InternalEvents.Session(duration: Int(elapsedTime)))
+        if Date().timeIntervalSince1970 - sessionLastTimestamp > Definitions.maxSessionLength {
+            rotateSession()
+        }
+    }
+
+    /// Pause session when app is backgrounded
+    func pauseSession() {
+        sessionLock.withLock {
+            sessionLastTimestamp = Date().timeIntervalSince1970
+        }
+    }
+
+    func resetSession() {
+        sessionLock.withLock {
+            sessionId = nil
+            sessionLastTimestamp = nil
+        }
+    }
+
+    func rotateSession() {
+        let newSessionId = UUID().uuidString
+        let newSessionLastTimestamp = Date().timeIntervalSince1970
+
+        sessionLock.withLock {
+            sessionId = newSessionId
+            sessionLastTimestamp = newSessionLastTimestamp
+        }
     }
 }

@@ -22,6 +22,7 @@ protocol IdentityRepositoryProtocol {
 final class IdentityRepository: IdentityRepositoryProtocol {
     private let storageRepository: StorageRepositoryProtocol
     private let identityApiClient: IdentityApiClientProtocol
+    private let internalProperties: InternalPropertiesProtocol
     private let logger: LoggerProtocol
 
     private var properties: [String: PaywallsValueTypeProtocol] {
@@ -46,10 +47,12 @@ final class IdentityRepository: IdentityRepositoryProtocol {
     init(
         storageRepository: StorageRepositoryProtocol,
         identityApiClient: IdentityApiClientProtocol,
+        internalProperties: InternalPropertiesProtocol,
         logger: LoggerProtocol
     ) {
         self.storageRepository = storageRepository
         self.identityApiClient = identityApiClient
+        self.internalProperties = internalProperties
         self.logger = logger
     }
 
@@ -137,8 +140,8 @@ final class IdentityRepository: IdentityRepositoryProtocol {
 
     private func setupNewUser(_ distinctId: String) {
         saveDistinctId(distinctId)
-        setProperties(InternalProperty.appUserProperties)
-        setOnceProperties(InternalProperty.setOnceProperties)
+        setProperties(internalProperties.appUserProperties)
+        setOnceProperties(internalProperties.setOnceProperties)
     }
 
     private func savePropertiesLocally(_ properties: [String: PaywallsValueTypeProtocol]) {

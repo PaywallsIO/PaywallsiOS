@@ -4,6 +4,7 @@ final class PaywallsContainer {
     private let config: PaywallsConfig
     private let logger: LoggerProtocol
 
+    lazy var internalProperties = buildInternalProperties()
     lazy var storageRepository = buildStorageRepository()
     lazy var eventsRepository = buildEventsRepository()
     lazy var identityRepository = buildIdentityRepository()
@@ -28,6 +29,7 @@ final class PaywallsContainer {
         self.config = config
         self.logger = Logger(logLevel: config.logLevel)
 
+        sessionManager.rotateSession()
         lifeCycleManager.register()
         dataSyncManager.startTimer()
     }
@@ -72,18 +74,15 @@ final class PaywallsContainer {
     }
 
     private func buildSessionManager() -> SessionManagerProtocol {
-        SessionManager(
-            eventsRepository: eventsRepository,
-            logger: logger,
-            scheduler: DispatchQueue.main
-        )
+        SessionManager()
     }
 
     private func buildLifeCycleManager() -> LifeCycleManagerProtocol {
         LifeCycleManager(
             logger: logger,
             dataSyncManager: dataSyncManager,
-            sessionManager: sessionManager
+            sessionManager: sessionManager,
+            eventRepository: eventsRepository
         )
     }
 
@@ -129,6 +128,7 @@ final class PaywallsContainer {
         IdentityRepository(
             storageRepository: storageRepository,
             identityApiClient: identityApiClient,
+            internalProperties: internalProperties,
             logger: logger
         )
     }
@@ -137,8 +137,13 @@ final class PaywallsContainer {
         EventsRepository(
             persistenceManager: persistenceManager,
             identityRepository: identityRepository,
+            internalProperties: internalProperties,
             logger: logger
         )
+    }
+
+    private func buildInternalProperties() -> InternalPropertiesProtocol {
+        InternalProperties(sessionManager: sessionManager)
     }
 
     private func buildDataDecoder() -> DataDecoderProtocol {
