@@ -43,12 +43,13 @@ final class PaywallsContainer {
         set: [String: PaywallsValueTypeProtocol] = [:],
         setOnce: [String: PaywallsValueTypeProtocol] = [:]
     ) {
-        identityRepository.identify(
+        let anonDistinctId = identityRepository.identify(
             distinctId,
             set: set,
             setOnce: setOnce
         )
         eventsRepository.logEvent(InternalEvents.Identify(
+            anonDistinctId: anonDistinctId,
             set: set,
             setOnce: setOnce,
             unset: []

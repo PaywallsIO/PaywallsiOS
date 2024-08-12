@@ -28,3 +28,6 @@ Identify:
       type: "array"
       valueType: "string"
       required: true
+    $anon_distinct_id:
+      type: "string"
+      required: true

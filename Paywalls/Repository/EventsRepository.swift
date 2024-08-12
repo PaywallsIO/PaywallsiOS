@@ -59,7 +59,6 @@ final class EventsRepository: EventsRepositoryProtocol {
 
         let entity = PersistentEvent(
             distinctId: identityRepository.distinctId,
-            oldDistinctId: identityRepository.oldDistinctId,
             eventName: eventName,
             properties: eventProperties.mapValues({ PaywallsValueType(value: $0) })
         )

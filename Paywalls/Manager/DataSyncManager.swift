@@ -78,7 +78,6 @@ final class CacheSyncManager: DataSyncManagerProtocol {
             .init(
                 uuid: $0.data.uuid,
                 distinctId: $0.data.distinctId,
-                oldDistinctId: $0.data.oldDistinctId,
                 eventName: $0.data.eventName,
                 timestamp: Int($0.createdAt.timeIntervalSince1970),
                 properties: $0.data.properties

@@ -3,12 +3,12 @@ import Foundation
 protocol IdentityRepositoryProtocol {
     var isAnonymous: Bool { get }
     var distinctId: String { get }
-    var oldDistinctId: String? { get }
+    var anonDistinctId: String? { get }
     func identify(
         _ newDistinctId: String,
         set: [String: PaywallsValueTypeProtocol],
         setOnce: [String: PaywallsValueTypeProtocol]
-    )
+    ) -> String
     func fetchProperties() async throws -> [String: PaywallsValueTypeProtocol]
     func setProperties(_ properties: [String: PaywallsValueTypeProtocol])
     func setOnceProperties(_ properties: [String: PaywallsValueTypeProtocol])
@@ -31,7 +31,7 @@ final class IdentityRepository: IdentityRepositoryProtocol {
         }
         return [:]
     }
-    var oldDistinctId: String?
+    var anonDistinctId: String?
     var distinctId: String {
         if let distinctId = storageRepository.getString(forKey: .distinctId) {
             return distinctId
@@ -60,17 +60,18 @@ final class IdentityRepository: IdentityRepositoryProtocol {
         _ newDistinctId: String,
         set: [String: PaywallsValueTypeProtocol] = [:],
         setOnce: [String: PaywallsValueTypeProtocol] = [:]
-    ) {
+    ) -> String {
         guard isAnonymous else {
             logger.info("User is already identified as \(distinctId)")
-            return
+            return distinctId
         }
         guard !isAnonymousId(distinctId: newDistinctId) else {
             logger.error("Cannot identify as anonymous user \(distinctId)")
-            return
+            return distinctId
         }
-        oldDistinctId = distinctId
+        anonDistinctId = distinctId
         saveDistinctId(newDistinctId)
+        return distinctId
     }
 
     func reset() {
@@ -134,7 +135,7 @@ final class IdentityRepository: IdentityRepositoryProtocol {
     // MARK: - Private
     private func reset(_ distinctId: String) {
         storageRepository.reset()
-        oldDistinctId = nil
+        anonDistinctId = nil
         setupNewUser(distinctId)
     }
 
