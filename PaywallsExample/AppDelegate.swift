@@ -5,10 +5,11 @@ import Paywalls
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-        let config = PaywallsConfig(apiKey: "12345")
+        let config = PaywallsConfig(apiKey: "1|a2BKlito6RjYAwnGXqjK25msqTUoIKYYptADngOA995641e3")
         config.logLevel = .verbose
         PaywallsSDK.setup(config: config)
 
+        PaywallsSDK.shared.reset()
         PaywallsSDK.shared.capture("Test Event", [
             "test": "value"
         ])

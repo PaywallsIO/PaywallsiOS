@@ -2,7 +2,7 @@ AppInstall:
   action: "$app_install"
   description: "PaywallSDK is configured for the first time for the given user"
   properties:
-    sessionId:
+    session_id:
       type: "string"
       required: true
 
@@ -12,4 +12,22 @@ Session:
   properties:
     duration:
       type: "int"
+      required: true
+
+Identify:
+  action: "$identify"
+  description: "Sets the the current user"
+  properties:
+    $set:
+      type: "dict"
+      required: true
+    $set_once:
+      type: "dict"
+      required: true
+    $unset:
+      type: "array"
+      valueType: "string"
+      required: true
+    $anon_distinct_id:
+      type: "string"
       required: true

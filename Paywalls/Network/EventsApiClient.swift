@@ -1,7 +1,7 @@
 import Foundation
 
 protocol EventsApiClientProtocol {
-    func logEvents(request: LogEventsRequest) async throws -> LogEventsResponse
+    func logEvents(request: LogEventsRequest) async throws
 }
 
 enum EventsApiClientError: Error {
@@ -23,18 +23,18 @@ final class EventsApiClient: EventsApiClientProtocol {
         self.logger = logger
     }
 
-    func logEvents(request: LogEventsRequest) async throws -> LogEventsResponse {
+    func logEvents(request: LogEventsRequest) async throws {
         let endpoint = ApiEndpoint(
-            path: "api/v1/app/events",
+            path: "api/events/ingest",
             httpMethod: .post,
             json: request
         )
         let (data, response) = try await requestManager.request(endpoint: endpoint)
+        logger.verbose("logEvent data \(String(data: try! JSONEncoder().encode(request), encoding: .utf8) ?? "nil")")
+
         switch response.statusCode {
         case 200..<300:
-            logger.verbose("logEvent data \(String(data: data, encoding: .utf8) ?? "nil")")
             logger.verbose("logEvent response \(response)")
-            return try dataDecoder.decode(LogEventsResponse.self, data: data)
         default:
             throw EventsApiClientError.invalidResponse(statusCode: response.statusCode)
         }

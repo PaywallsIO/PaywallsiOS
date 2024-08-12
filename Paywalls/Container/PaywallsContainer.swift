@@ -4,6 +4,7 @@ final class PaywallsContainer {
     private let config: PaywallsConfig
     private let logger: LoggerProtocol
 
+    lazy var internalProperties = buildInternalProperties()
     lazy var storageRepository = buildStorageRepository()
     lazy var eventsRepository = buildEventsRepository()
     lazy var identityRepository = buildIdentityRepository()
@@ -28,6 +29,7 @@ final class PaywallsContainer {
         self.config = config
         self.logger = Logger(logLevel: config.logLevel)
 
+        sessionManager.rotateSession()
         lifeCycleManager.register()
         dataSyncManager.startTimer()
     }
@@ -41,13 +43,21 @@ final class PaywallsContainer {
         set: [String: PaywallsValueTypeProtocol] = [:],
         setOnce: [String: PaywallsValueTypeProtocol] = [:]
     ) {
-        identityRepository.identify(distinctId)
-        if !setOnce.isEmpty {
-            identityRepository.setOnceProperties(setOnce)
-        }
-        if !set.isEmpty {
-            identityRepository.setProperties(set)
-        }
+        let anonDistinctId = identityRepository.identify(
+            distinctId,
+            set: set,
+            setOnce: setOnce
+        )
+        eventsRepository.logEvent(InternalEvents.Identify(
+            anonDistinctId: anonDistinctId,
+            set: set,
+            setOnce: setOnce,
+            unset: []
+        ))
+    }
+
+    func reset() {
+        identityRepository.reset()
     }
 
     // MARK: Private
@@ -65,18 +75,15 @@ final class PaywallsContainer {
     }
 
     private func buildSessionManager() -> SessionManagerProtocol {
-        SessionManager(
-            eventsRepository: eventsRepository,
-            logger: logger,
-            scheduler: DispatchQueue.main
-        )
+        SessionManager()
     }
 
     private func buildLifeCycleManager() -> LifeCycleManagerProtocol {
         LifeCycleManager(
             logger: logger,
             dataSyncManager: dataSyncManager,
-            sessionManager: sessionManager
+            sessionManager: sessionManager,
+            eventRepository: eventsRepository
         )
     }
 
@@ -100,8 +107,7 @@ final class PaywallsContainer {
         SqlitePersistenceManager(
             databaseFileName: Definitions.libName,
             persistableModels: [
-                PersistentEvent.self,
-                PersistentAppUser.self
+                PersistentEvent.self
             ],
             logger: logger
         )
@@ -122,9 +128,8 @@ final class PaywallsContainer {
     private func buildIdentityRepository() -> IdentityRepositoryProtocol {
         IdentityRepository(
             storageRepository: storageRepository,
-            persistenceManager: persistenceManager,
             identityApiClient: identityApiClient,
-            dataSyncManager: dataSyncManager,
+            internalProperties: internalProperties,
             logger: logger
         )
     }
@@ -133,8 +138,13 @@ final class PaywallsContainer {
         EventsRepository(
             persistenceManager: persistenceManager,
             identityRepository: identityRepository,
+            internalProperties: internalProperties,
             logger: logger
         )
+    }
+
+    private func buildInternalProperties() -> InternalPropertiesProtocol {
+        InternalProperties(sessionManager: sessionManager)
     }
 
     private func buildDataDecoder() -> DataDecoderProtocol {

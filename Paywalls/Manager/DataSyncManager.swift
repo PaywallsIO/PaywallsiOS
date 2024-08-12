@@ -4,7 +4,6 @@ protocol DataSyncManagerProtocol {
     func preformSync()
     func startTimer()
     func stopTimer()
-    func syncAppUsers() async
     func syncEvents() async
 }
 
@@ -70,7 +69,6 @@ final class CacheSyncManager: DataSyncManagerProtocol {
     private func preformSyncInQueue() {
         Task {
             await syncEvents()
-            await syncAppUsers()
         }
     }
 
@@ -78,49 +76,23 @@ final class CacheSyncManager: DataSyncManagerProtocol {
         let events = persistenceManager.getAll(PersistentEvent.self, limit: batchSize, offset: 0)
         let request = LogEventsRequest(events: events.map({
             .init(
-                localId: $0.id,
+                uuid: $0.data.uuid,
                 distinctId: $0.data.distinctId,
-                ogDistinctId: $0.data.ogDistinctId,
                 eventName: $0.data.eventName,
-                eventTime: $0.createdAt,
+                timestamp: Int($0.createdAt.timeIntervalSince1970),
                 properties: $0.data.properties
             )
         }))
         do {
-            let response = try await eventsApiClient.logEvents(request: request)
-            processEventsResponse(response)
+            try await eventsApiClient.logEvents(request: request)
+            deleteEvents(events.map(\.id))
         } catch {
             logger.error("Error sending events to server: \(error.localizedDescription)")
         }
     }
 
-    func syncAppUsers() async {
-        let appUsers = persistenceManager.getAll(PersistentAppUser.self, limit: batchSize, offset: 0)
-        let request = SaveAppUsersRequest(appUsers: appUsers.map({
-            .init(
-                localId: $0.id,
-                distinctId: $0.data.distinctId,
-                set: $0.data.set,
-                setOnce: $0.data.setOnce,
-                remove: $0.data.remove
-            )
-        }))
-        do {
-            let response = try await identityApiClient.saveAppUsers(request: request)
-            processAppUsersResponse(response)
-        } catch {
-            logger.error("Error sending profiles to server: \(error.localizedDescription)")
-        }
-    }
-
-    private func processAppUsersResponse(_ response: SaveAppUsersResponse) {
-        persistenceManager.delete(PersistentAppUser.self, requests: response.processed.map({
-            .init(id: $0)
-        }))
-    }
-
-    private func processEventsResponse(_ response: LogEventsResponse) {
-        persistenceManager.delete(PersistentEvent.self, requests: response.processed.map({
+    private func deleteEvents(_ eventIds: [Int]) {
+        persistenceManager.delete(PersistentEvent.self, requests: eventIds.map({
             .init(id: $0)
         }))
     }

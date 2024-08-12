@@ -8,21 +8,24 @@ protocol EventsRepositoryProtocol {
 
 protocol InternalEvent {
     var action: String { get }
-    var properties: [String: PaywallsValueTypeProtocol] { get }
+    var properties: [String: PaywallsValueTypeProtocol?] { get }
 }
 
 final class EventsRepository: EventsRepositoryProtocol {
     private let logger: LoggerProtocol
     private let persistenceManager: PersistenceManagerProtocol
     private let identityRepository: IdentityRepositoryProtocol
+    private let internalProperties: InternalPropertiesProtocol
 
     init(
         persistenceManager: PersistenceManagerProtocol,
         identityRepository: IdentityRepositoryProtocol,
+        internalProperties: InternalPropertiesProtocol,
         logger: LoggerProtocol
     ) {
         self.persistenceManager = persistenceManager
         self.identityRepository = identityRepository
+        self.internalProperties = internalProperties
         self.logger = logger
     }
 
@@ -48,14 +51,14 @@ final class EventsRepository: EventsRepositoryProtocol {
 
     private func _logEvent(
         _ eventName: String,
-        properties: [String: PaywallsValueTypeProtocol]
+        properties: [String: PaywallsValueTypeProtocol?]
     ) {
-        let properties = properties.mapValues({ PaywallsValueType(value: $0) })
+        let eventProperties = properties.merging(internalProperties.eventProperties) { left, _ in left }
+
         let entity = PersistentEvent(
             distinctId: identityRepository.distinctId,
-            ogDistinctId: identityRepository.ogDistinctId,
             eventName: eventName,
-            properties: properties.merging(InternalProperty.eventProperties) { left, _ in left }
+            properties: eventProperties.mapValues({ PaywallsValueType(value: $0) })
         )
         persistenceManager.insert(PersistentEvent.self, entity)
     }
