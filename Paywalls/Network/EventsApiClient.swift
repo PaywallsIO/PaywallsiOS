@@ -29,7 +29,24 @@ final class EventsApiClient: EventsApiClientProtocol {
             httpMethod: .post,
             json: request
         )
-        let (data, response) = try await requestManager.request(endpoint: endpoint)
+        let (_, response) = try await requestManager.request(endpoint: endpoint)
+        logger.verbose("logEvent data \(String(data: try! JSONEncoder().encode(request), encoding: .utf8) ?? "nil")")
+
+        switch response.statusCode {
+        case 200..<300:
+            logger.verbose("logEvent response \(response)")
+        default:
+            throw EventsApiClientError.invalidResponse(statusCode: response.statusCode)
+        }
+    }
+
+    func trigger(request: TriggerRequest) async throws -> TriggerResponse? {
+        let endpoint = ApiEndpoint(
+            path: "api/events/trigger",
+            httpMethod: .post,
+            json: request
+        )
+        let (_, response) = try await requestManager.request(endpoint: endpoint)
         logger.verbose("logEvent data \(String(data: try! JSONEncoder().encode(request), encoding: .utf8) ?? "nil")")
 
         switch response.statusCode {

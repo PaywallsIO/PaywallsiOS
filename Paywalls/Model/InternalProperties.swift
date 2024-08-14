@@ -70,7 +70,7 @@ final class InternalProperties: InternalPropertiesProtocol {
 
     var setOnceProperties: [String: PaywallsValueTypeProtocol] {
         var properties = [String: PaywallsValueTypeProtocol]()
-        properties[Self.firstSeen] = Date().ISO8601Format()
+        properties[Self.firstSeen] = Date().timeIntervalSince1970
         properties[Self.bundleIdentifier] = Bundle.main.bundleIdentifier
         properties[Self.firstSeenLib] = "swift"
 

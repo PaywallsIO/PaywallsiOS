@@ -42,6 +42,8 @@
 		535363FE2C635145009907F5 /* LifeCycleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363FD2C635145009907F5 /* LifeCycleManager.swift */; };
 		535364032C645AE5009907F5 /* InternalEvents.yaml in Resources */ = {isa = PBXBuildFile; fileRef = 535364022C645AE5009907F5 /* InternalEvents.yaml */; };
 		535364052C645D0B009907F5 /* InternalEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535364042C645D0B009907F5 /* InternalEvents.swift */; };
+		535364092C6C65AC009907F5 /* TriggerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535364082C6C65AC009907F5 /* TriggerRequest.swift */; };
+		5353640B2C6C663F009907F5 /* TriggerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5353640A2C6C663F009907F5 /* TriggerResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,6 +108,8 @@
 		535363FD2C635145009907F5 /* LifeCycleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LifeCycleManager.swift; sourceTree = "<group>"; };
 		535364022C645AE5009907F5 /* InternalEvents.yaml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = InternalEvents.yaml; sourceTree = "<group>"; };
 		535364042C645D0B009907F5 /* InternalEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternalEvents.swift; sourceTree = "<group>"; };
+		535364082C6C65AC009907F5 /* TriggerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriggerRequest.swift; sourceTree = "<group>"; };
+		5353640A2C6C663F009907F5 /* TriggerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriggerResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -272,6 +276,8 @@
 				535363DC2C633A48009907F5 /* GetAppUserRequest.swift */,
 				535363DD2C633A48009907F5 /* GetAppUserResponse.swift */,
 				535363DE2C633A48009907F5 /* LogEventsRequest.swift */,
+				535364082C6C65AC009907F5 /* TriggerRequest.swift */,
+				5353640A2C6C663F009907F5 /* TriggerResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -456,8 +462,10 @@
 				535363D12C63384C009907F5 /* InternalProperties.swift in Sources */,
 				535363F42C633FC2009907F5 /* IdentityRepository.swift in Sources */,
 				535363ED2C633A48009907F5 /* EventsApiClient.swift in Sources */,
+				535364092C6C65AC009907F5 /* TriggerRequest.swift in Sources */,
 				535363EE2C633A48009907F5 /* IdentityApiClient.swift in Sources */,
 				535363F52C633FC2009907F5 /* EventsRepository.swift in Sources */,
+				5353640B2C6C663F009907F5 /* TriggerResponse.swift in Sources */,
 				535363FC2C63422D009907F5 /* SessionManager.swift in Sources */,
 				535363F12C633C1E009907F5 /* DataDecoder.swift in Sources */,
 				535363FE2C635145009907F5 /* LifeCycleManager.swift in Sources */,
@@ -691,7 +699,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
@@ -700,7 +708,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.1;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -736,7 +744,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
@@ -745,7 +753,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.1;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -778,7 +786,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -808,7 +816,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
