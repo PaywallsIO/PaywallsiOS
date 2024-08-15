@@ -44,6 +44,9 @@
 		535364052C645D0B009907F5 /* InternalEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535364042C645D0B009907F5 /* InternalEvents.swift */; };
 		535364092C6C65AC009907F5 /* TriggerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535364082C6C65AC009907F5 /* TriggerRequest.swift */; };
 		5353640B2C6C663F009907F5 /* TriggerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5353640A2C6C663F009907F5 /* TriggerResponse.swift */; };
+		5353640E2C6D95E6009907F5 /* TriggerFire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5353640D2C6D95E6009907F5 /* TriggerFire.swift */; };
+		535364112C6D9623009907F5 /* EventsAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535364102C6D9623009907F5 /* EventsAdapter.swift */; };
+		535364132C6D9B95009907F5 /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535364122C6D9B94009907F5 /* UIHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,6 +113,9 @@
 		535364042C645D0B009907F5 /* InternalEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternalEvents.swift; sourceTree = "<group>"; };
 		535364082C6C65AC009907F5 /* TriggerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriggerRequest.swift; sourceTree = "<group>"; };
 		5353640A2C6C663F009907F5 /* TriggerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriggerResponse.swift; sourceTree = "<group>"; };
+		5353640D2C6D95E6009907F5 /* TriggerFire.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriggerFire.swift; sourceTree = "<group>"; };
+		535364102C6D9623009907F5 /* EventsAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsAdapter.swift; sourceTree = "<group>"; };
+		535364122C6D9B94009907F5 /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +184,7 @@
 				535363A92C608C05009907F5 /* Model */,
 				535363AE2C608D0A009907F5 /* Utils */,
 				535363832C6082E3009907F5 /* Paywalls.h */,
+				535364142C6D9CD1009907F5 /* Extensions */,
 				535363A12C608426009907F5 /* PaywallsSDK.swift */,
 			);
 			path = Paywalls;
@@ -214,6 +221,7 @@
 				535363AC2C608D03009907F5 /* DateHelper.swift */,
 				535363BB2C616ACF009907F5 /* Logger.swift */,
 				535363F02C633C1E009907F5 /* DataDecoder.swift */,
+				535364122C6D9B94009907F5 /* UIHelper.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -238,6 +246,8 @@
 		535363C42C632A30009907F5 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				5353640F2C6D9614009907F5 /* Adapter */,
+				5353640C2C6D95DA009907F5 /* Model */,
 				535363F32C633FC2009907F5 /* EventsRepository.swift */,
 				535363F22C633FC2009907F5 /* IdentityRepository.swift */,
 				535363C02C616C44009907F5 /* StorageRepository.swift */,
@@ -301,6 +311,29 @@
 				535363F92C634207009907F5 /* DataSyncManager.swift */,
 			);
 			path = Manager;
+			sourceTree = "<group>";
+		};
+		5353640C2C6D95DA009907F5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5353640D2C6D95E6009907F5 /* TriggerFire.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		5353640F2C6D9614009907F5 /* Adapter */ = {
+			isa = PBXGroup;
+			children = (
+				535364102C6D9623009907F5 /* EventsAdapter.swift */,
+			);
+			path = Adapter;
+			sourceTree = "<group>";
+		};
+		535364142C6D9CD1009907F5 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -454,6 +487,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				535364112C6D9623009907F5 /* EventsAdapter.swift in Sources */,
 				535364052C645D0B009907F5 /* InternalEvents.swift in Sources */,
 				535363AD2C608D03009907F5 /* DateHelper.swift in Sources */,
 				535363C12C616C44009907F5 /* StorageRepository.swift in Sources */,
@@ -472,9 +506,11 @@
 				535363BC2C616ACF009907F5 /* Logger.swift in Sources */,
 				535363EF2C633A48009907F5 /* RequestManager.swift in Sources */,
 				535363FA2C634207009907F5 /* DataSyncManager.swift in Sources */,
+				5353640E2C6D95E6009907F5 /* TriggerFire.swift in Sources */,
 				535363A22C608426009907F5 /* PaywallsSDK.swift in Sources */,
 				535363B22C608F90009907F5 /* PaywallsContainer.swift in Sources */,
 				535363DB2C63389E009907F5 /* PersistenceManager.swift in Sources */,
+				535364132C6D9B95009907F5 /* UIHelper.swift in Sources */,
 				535363E92C633A48009907F5 /* LogEventsRequest.swift in Sources */,
 				535363E72C633A48009907F5 /* GetAppUserRequest.swift in Sources */,
 				535363B62C6097FA009907F5 /* PaywallsValueType.swift in Sources */,

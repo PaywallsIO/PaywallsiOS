@@ -5,7 +5,7 @@ import Paywalls
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-        let config = PaywallsConfig(apiKey: "1|a2BKlito6RjYAwnGXqjK25msqTUoIKYYptADngOA995641e3")
+        let config = PaywallsConfig(apiKey: "1|VowpP4DaDQI99s6R7VzC0yoDhbnZCmo0laO4pNWL7623d14e")
         config.logLevel = .verbose
         PaywallsSDK.setup(config: config)
 

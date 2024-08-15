@@ -2,8 +2,8 @@ import Foundation
 
 struct TriggerRequest: Codable {
     enum CodingKeys: String, CodingKey {
-        case eventName = "event_name"
+        case event = "event"
     }
 
-    let eventName: String
+    let event: String
 }

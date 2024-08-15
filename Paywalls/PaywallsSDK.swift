@@ -35,6 +35,10 @@ public final class PaywallsSDK: NSObject {
         container.identify(distinctId)
     }
 
+    public func trigger(_ eventName: String, presentingViewController: UIViewController? = nil) {
+        container.trigger(eventName, presentingViewController: presentingViewController)
+    }
+
     public func reset() {
         container.reset()
     }

@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 final class PaywallsContainer {
     private let config: PaywallsConfig
@@ -22,6 +23,12 @@ final class PaywallsContainer {
     lazy var dataDecoder = buildDataDecoder()
 
     private let syncQueue = DispatchQueue(label: "io.paywalls.sync", qos: .utility, attributes: .concurrent, autoreleaseFrequency: .workItem)
+
+    private var triggerTask: Task<Void, Never>?
+
+    deinit {
+        triggerTask?.cancel()
+    }
 
     init(
         config: PaywallsConfig
@@ -60,7 +67,28 @@ final class PaywallsContainer {
         identityRepository.reset()
     }
 
+    func trigger(_ eventName: String, presentingViewController: UIViewController? = nil) {
+        triggerTask?.cancel()
+        triggerTask = Task { @MainActor [weak self, eventsRepository] in
+            do {
+                if let triggerFire = try await eventsRepository.trigger(eventName) {
+                    self?.handleTriggerFire(triggerFire, presentingViewController)
+                }
+            } catch {
+                self?.logger.error(error.localizedDescription)
+            }
+        }
+    }
+
     // MARK: Private
+
+    private func handleTriggerFire(_ triggerFire: TriggerFire, _ presentingViewController: UIViewController?) {
+        let alert = UIAlertController(title: "Alert", message: nil, preferredStyle: .alert)
+        alert.addAction(.init(title: "okay", style: .cancel))
+
+        let viewController = presentingViewController ?? UIHelper.topViewController
+        viewController?.present(alert, animated: true)
+    }
 
     private func buildDataSyncManager() -> DataSyncManagerProtocol {
         CacheSyncManager(
@@ -136,6 +164,7 @@ final class PaywallsContainer {
 
     private func buildEventsRepository() -> EventsRepositoryProtocol {
         EventsRepository(
+            apiClient: eventsApiClient,
             persistenceManager: persistenceManager,
             identityRepository: identityRepository,
             internalProperties: internalProperties,
