@@ -80,14 +80,17 @@ final class PaywallsContainer {
         }
     }
 
+    func makePaywallViewModel(coordinator: PaywallCoordinatorProtocol, triggerFire: TriggerFire) -> some PaywallViewModelProtocol {
+        PaywallViewModel(coordinator: coordinator, triggerFire: triggerFire)
+    }
+
     // MARK: Private
 
     private func handleTriggerFire(_ triggerFire: TriggerFire, _ presentingViewController: UIViewController?) {
-        let alert = UIAlertController(title: "Alert", message: nil, preferredStyle: .alert)
-        alert.addAction(.init(title: "okay", style: .cancel))
+        let coordinator = buildPaywallCoordiantor(triggerFire: triggerFire)
 
-        let viewController = presentingViewController ?? UIHelper.topViewController
-        viewController?.present(alert, animated: true)
+        let presentingViewController = presentingViewController ?? UIHelper.topViewController
+        presentingViewController?.present(coordinator.instinateRoot(), animated: true)
     }
 
     private func buildDataSyncManager() -> DataSyncManagerProtocol {
@@ -100,6 +103,10 @@ final class PaywallsContainer {
             syncInterval: Definitions.syncInterval,
             batchSize: Definitions.batchSize
         )
+    }
+
+    private func buildPaywallCoordiantor(triggerFire: TriggerFire) -> PaywallCoordinatorProtocol {
+        PaywallCoordinator(container: self, triggerFire: triggerFire)
     }
 
     private func buildSessionManager() -> SessionManagerProtocol {
