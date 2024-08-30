@@ -12,6 +12,7 @@ final class PaywallsContainer {
 
     lazy var essionManager = buildSessionManager()
     lazy var requestManager = buildRequestManager()
+    lazy var reachabilityManager = buildReachabilityManager()
     lazy var persistenceManager = buildPersistenceManager()
     lazy var dataSyncManager = buildDataSyncManager()
     lazy var lifeCycleManager = buildLifeCycleManager()
@@ -138,6 +139,10 @@ final class PaywallsContainer {
         )
     }
 
+    public func buildReachabilityManager() -> ReachabilityManagerProtocol {
+        ReachabilityManager(logger: logger)
+    }
+
     private func buildPersistenceManager() -> PersistenceManagerProtocol {
         SqlitePersistenceManager(
             databaseFileName: Definitions.libName,
@@ -180,7 +185,7 @@ final class PaywallsContainer {
     }
 
     private func buildInternalProperties() -> InternalPropertiesProtocol {
-        InternalProperties(sessionManager: sessionManager)
+        InternalProperties(sessionManager: sessionManager, reachability: reachabilityManager)
     }
 
     private func buildDataDecoder() -> DataDecoderProtocol {

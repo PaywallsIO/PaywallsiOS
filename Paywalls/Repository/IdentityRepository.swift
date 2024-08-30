@@ -136,13 +136,7 @@ final class IdentityRepository: IdentityRepositoryProtocol {
     private func reset(_ distinctId: String) {
         storageRepository.reset()
         anonDistinctId = nil
-        setupNewUser(distinctId)
-    }
-
-    private func setupNewUser(_ distinctId: String) {
         saveDistinctId(distinctId)
-        setProperties(internalProperties.appUserProperties)
-        setOnceProperties(internalProperties.setOnceProperties)
     }
 
     private func savePropertiesLocally(_ properties: [String: PaywallsValueTypeProtocol]) {

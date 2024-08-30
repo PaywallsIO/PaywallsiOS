@@ -74,6 +74,10 @@ final class CacheSyncManager: DataSyncManagerProtocol {
 
     func syncEvents() async {
         let events = persistenceManager.getAll(PersistentEvent.self, limit: batchSize, offset: 0)
+        guard !events.isEmpty else {
+            logger.info("No events in cache. Skipping sync.")
+            return
+        }
         let request = LogEventsRequest(events: events.map({
             .init(
                 uuid: $0.data.uuid,

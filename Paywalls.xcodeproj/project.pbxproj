@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		531DE6802C814ABD00AF51FF /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531DE67F2C814ABC00AF51FF /* Reachability.swift */; };
+		531DE6822C814E3800AF51FF /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531DE6812C814E3800AF51FF /* ReachabilityManager.swift */; };
 		535363842C6082E3009907F5 /* Paywalls.h in Headers */ = {isa = PBXBuildFile; fileRef = 535363832C6082E3009907F5 /* Paywalls.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5353638F2C60834D009907F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5353638E2C60834D009907F5 /* AppDelegate.swift */; };
 		535363912C60834D009907F5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535363902C60834D009907F5 /* SceneDelegate.swift */; };
@@ -80,6 +82,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		531DE67F2C814ABC00AF51FF /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		531DE6812C814E3800AF51FF /* ReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
 		5353635A2C60819F009907F5 /* PaywallsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaywallsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		535363812C6082E3009907F5 /* Paywalls.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Paywalls.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		535363832C6082E3009907F5 /* Paywalls.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Paywalls.h; sourceTree = "<group>"; };
@@ -234,6 +238,7 @@
 				535363BB2C616ACF009907F5 /* Logger.swift */,
 				535363F02C633C1E009907F5 /* DataDecoder.swift */,
 				535364122C6D9B94009907F5 /* UIHelper.swift */,
+				531DE67F2C814ABC00AF51FF /* Reachability.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -327,6 +332,7 @@
 				535363FD2C635145009907F5 /* LifeCycleManager.swift */,
 				535363FB2C63422D009907F5 /* SessionManager.swift */,
 				535363F92C634207009907F5 /* DataSyncManager.swift */,
+				531DE6812C814E3800AF51FF /* ReachabilityManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -520,10 +526,12 @@
 				535364092C6C65AC009907F5 /* TriggerRequest.swift in Sources */,
 				535363EE2C633A48009907F5 /* IdentityApiClient.swift in Sources */,
 				535363F52C633FC2009907F5 /* EventsRepository.swift in Sources */,
+				531DE6802C814ABD00AF51FF /* Reachability.swift in Sources */,
 				5353640B2C6C663F009907F5 /* TriggerResponse.swift in Sources */,
 				535363FC2C63422D009907F5 /* SessionManager.swift in Sources */,
 				535364182C6DAAE4009907F5 /* PaywallViewController.swift in Sources */,
 				535363F12C633C1E009907F5 /* DataDecoder.swift in Sources */,
+				531DE6822C814E3800AF51FF /* ReachabilityManager.swift in Sources */,
 				535363FE2C635145009907F5 /* LifeCycleManager.swift in Sources */,
 				535363BC2C616ACF009907F5 /* Logger.swift in Sources */,
 				535363EF2C633A48009907F5 /* RequestManager.swift in Sources */,
