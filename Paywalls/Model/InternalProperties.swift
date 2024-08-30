@@ -31,6 +31,7 @@ final class InternalProperties: InternalPropertiesProtocol {
     static let ip = "$ip"
     static let networkWifi = "$network_wifi"
     static let networkCellular = "$network_cellular"
+    static let sessionDurationSeconds = "$session_duration_seconds"
 
     init(sessionManager: SessionManagerProtocol, reachability: ReachabilityManagerProtocol) {
         self.sessionManager = sessionManager
@@ -40,6 +41,7 @@ final class InternalProperties: InternalPropertiesProtocol {
     var eventProperties: [String: PaywallsValueTypeProtocol] {
         var properties = [String: PaywallsValueTypeProtocol]()
 
+        properties[Self.sessionDurationSeconds] = sessionManager.secondsSinceSessionStart
         properties[Self.manufacturer] = "Apple"
         properties[Self.lib] = "swift"
         properties[Self.deviceModel] = platform()

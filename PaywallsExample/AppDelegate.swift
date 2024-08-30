@@ -9,7 +9,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         config.logLevel = .verbose
         PaywallsSDK.setup(config: config)
 
-        PaywallsSDK.shared.reset()
+//        PaywallsSDK.shared.reset()
         PaywallsSDK.shared.capture("Test Event", [
             "test": "value"
         ])
