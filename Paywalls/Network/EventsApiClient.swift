@@ -34,7 +34,7 @@ final class EventsApiClient: EventsApiClientProtocol {
 
         switch response.statusCode {
         case 200..<300:
-            logger.verbose("logEvent response \(response)")
+            return
         default:
             throw EventsApiClientError.invalidResponse(statusCode: response.statusCode)
         }
@@ -48,7 +48,6 @@ final class EventsApiClient: EventsApiClientProtocol {
         )
         let (data, response) = try await requestManager.request(endpoint: endpoint)
 
-        logger.verbose("logEvent response \(response)")
         switch response.statusCode {
         case 200:
             return try dataDecoder.decode(TriggerResponse.self, data: data)

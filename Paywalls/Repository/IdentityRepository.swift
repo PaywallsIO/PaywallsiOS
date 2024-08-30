@@ -69,9 +69,10 @@ final class IdentityRepository: IdentityRepositoryProtocol {
             logger.error("Cannot identify as anonymous user \(distinctId)")
             return distinctId
         }
-        anonDistinctId = distinctId
+        let oldId = distinctId
+        anonDistinctId = oldId
         saveDistinctId(newDistinctId)
-        return distinctId
+        return oldId
     }
 
     func reset() {
