@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 final class PaywallsContainer {
     private let config: PaywallsConfig
@@ -11,6 +12,7 @@ final class PaywallsContainer {
 
     lazy var essionManager = buildSessionManager()
     lazy var requestManager = buildRequestManager()
+    lazy var reachabilityManager = buildReachabilityManager()
     lazy var persistenceManager = buildPersistenceManager()
     lazy var dataSyncManager = buildDataSyncManager()
     lazy var lifeCycleManager = buildLifeCycleManager()
@@ -22,6 +24,12 @@ final class PaywallsContainer {
     lazy var dataDecoder = buildDataDecoder()
 
     private let syncQueue = DispatchQueue(label: "io.paywalls.sync", qos: .utility, attributes: .concurrent, autoreleaseFrequency: .workItem)
+
+    private var triggerTask: Task<Void, Never>?
+
+    deinit {
+        triggerTask?.cancel()
+    }
 
     init(
         config: PaywallsConfig
@@ -60,7 +68,31 @@ final class PaywallsContainer {
         identityRepository.reset()
     }
 
+    func trigger(_ eventName: String, presentingViewController: UIViewController? = nil) {
+        triggerTask?.cancel()
+        triggerTask = Task { @MainActor [weak self, eventsRepository] in
+            do {
+                if let triggerFire = try await eventsRepository.trigger(eventName) {
+                    self?.handleTriggerFire(triggerFire, presentingViewController)
+                }
+            } catch {
+                self?.logger.error(error.localizedDescription)
+            }
+        }
+    }
+
+    func makePaywallViewModel(coordinator: PaywallCoordinatorProtocol, triggerFire: TriggerFire) -> some PaywallViewModelProtocol {
+        PaywallViewModel(coordinator: coordinator, triggerFire: triggerFire)
+    }
+
     // MARK: Private
+
+    private func handleTriggerFire(_ triggerFire: TriggerFire, _ presentingViewController: UIViewController?) {
+        let coordinator = buildPaywallCoordiantor(triggerFire: triggerFire)
+
+        let presentingViewController = presentingViewController ?? UIHelper.topViewController
+        presentingViewController?.present(coordinator.instinateRoot(), animated: true)
+    }
 
     private func buildDataSyncManager() -> DataSyncManagerProtocol {
         CacheSyncManager(
@@ -72,6 +104,10 @@ final class PaywallsContainer {
             syncInterval: Definitions.syncInterval,
             batchSize: Definitions.batchSize
         )
+    }
+
+    private func buildPaywallCoordiantor(triggerFire: TriggerFire) -> PaywallCoordinatorProtocol {
+        PaywallCoordinator(container: self, triggerFire: triggerFire)
     }
 
     private func buildSessionManager() -> SessionManagerProtocol {
@@ -101,6 +137,10 @@ final class PaywallsContainer {
             bearerToken: config.apiKey,
             logger: logger
         )
+    }
+
+    public func buildReachabilityManager() -> ReachabilityManagerProtocol {
+        ReachabilityManager(logger: logger)
     }
 
     private func buildPersistenceManager() -> PersistenceManagerProtocol {
@@ -136,6 +176,7 @@ final class PaywallsContainer {
 
     private func buildEventsRepository() -> EventsRepositoryProtocol {
         EventsRepository(
+            apiClient: eventsApiClient,
             persistenceManager: persistenceManager,
             identityRepository: identityRepository,
             internalProperties: internalProperties,
@@ -144,7 +185,7 @@ final class PaywallsContainer {
     }
 
     private func buildInternalProperties() -> InternalPropertiesProtocol {
-        InternalProperties(sessionManager: sessionManager)
+        InternalProperties(sessionManager: sessionManager, reachability: reachabilityManager)
     }
 
     private func buildDataDecoder() -> DataDecoderProtocol {

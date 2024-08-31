@@ -32,8 +32,6 @@ final class IdentityApiClient: IdentityApiClientProtocol {
         let (data, response) = try await requestManager.request(endpoint: endpoint)
         switch response.statusCode {
         case 200:
-            logger.verbose("getAppUser data \(String(data: data, encoding: .utf8) ?? "nil")")
-            logger.verbose("getAppUser response \(response)")
             return try dataDecoder.decode(GetAppUserResponse.self, data: data)
         case 404:
             throw IdentityApiClientError.notFound

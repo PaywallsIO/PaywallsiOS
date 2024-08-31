@@ -102,9 +102,7 @@ class URLSessionRequestManager: RequestManagerProtocol {
         }
 
         do {
-            logger.verbose(urlRequest.debugDescription)
             let response = try await URLSession.shared.data(for: urlRequest)
-            logger.verbose("Response: \(String(data: response.0, encoding: .utf8) ?? "nil") \(response.1)")
             guard let httpResponse = response.1 as? HTTPURLResponse else {
                 throw RequestManagerError.invalidResponse
             }

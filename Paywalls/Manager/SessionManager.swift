@@ -2,6 +2,7 @@ import Foundation
 
 protocol SessionManagerProtocol {
     var sessionId: String? { get }
+    var secondsSinceSessionStart: Double? { get }
 
     func rotateSessionIdIfRequired()
     func rotateSession()
@@ -10,7 +11,16 @@ protocol SessionManagerProtocol {
 }
 
 class SessionManager: SessionManagerProtocol {
-    private(set) var sessionId: String?
+    private(set) var sessionId: String? {
+        didSet {
+            sessionStartDate = Date()
+        }
+    }
+    private var sessionStartDate = Date()
+
+    var secondsSinceSessionStart: Double? {
+        return Date().timeIntervalSince1970 - sessionStartDate.timeIntervalSince1970
+    }
 
     private var sessionLastTimestamp: TimeInterval?
     private let sessionLock = NSLock()
